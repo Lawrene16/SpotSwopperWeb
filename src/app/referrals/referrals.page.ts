@@ -22,6 +22,9 @@ export class ReferralsPage implements OnInit {
 
   ngAfterViewInit(){
     this.loadMyReferees();
+    this.storage.get('userdetails').then((res) =>{
+        this.refcode = res.refnumber;
+    });
   }
 
   loadMyReferees(){

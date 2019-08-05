@@ -1,9 +1,51 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>myaccount</ion-title>
-  </ion-toolbar>
-</ion-header>
+    <ion-toolbar  color="dark">
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+          </ion-buttons>
+  
+      <ion-title>My Account</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
 <ion-content>
+    <div class="topdiv" >
 
+        <div class="user-photo">
+          <img height="80" src="../../assets/icon/man.svg">
+        </div>
+    
+        <div align="center" style="margin-top: 2px; color: white">Account Balance: ${{balance}}</div>    
+        <p align="center">
+            <ion-button style="height: 25px"  expand="round" color="danger" (click)="signin()">Withdraw Funds</ion-button>
+        </p>
+      </div>
+
+
+      <div>
+          <ion-list>
+      
+            <ion-item-divider>
+                Personal Info
+                <!-- <ion-icon *ngIf="isPersonalReadonly" name="ios-create" (click)="makeEditable(1)" style="margin-right: 5px" slot="end"></ion-icon>
+                <ion-icon *ngIf="!isPersonalReadonly" name="ios-checkmark" (click)="stopEdit()" slot="end"></ion-icon>
+       -->
+            </ion-item-divider>
+      
+            <ion-item>
+                <ion-input style="font-size: 15px" #nameinput [readonly]="isPersonalReadonly" [(ngModel)]="fullname"></ion-input>
+                <ion-icon name="ios-person" item-left></ion-icon>
+            </ion-item>
+            <ion-item>
+                <ion-input style="font-size: 15px" [readonly]="nottrue" [(ngModel)]="email"></ion-input>
+                <ion-icon name="ios-mail" item-left></ion-icon>
+            </ion-item>
+            <ion-item>
+                <ion-input style="font-size: 15px" [readonly]="nottrue" [(ngModel)]="myrefid"></ion-input>
+                <ion-icon name="ios-share-alt" item-left></ion-icon>
+            </ion-item>
+            <br>
+      
+        </ion-list>
+        </div>
 </ion-content>
