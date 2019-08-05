@@ -1,16 +1,89 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar class="navclass" color="dark">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>
-      Home
+<!--     
+    <ion-searchbar no-padding 
+    #topsearch
+  placeholder="Search by address or zip code"
+  [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()"
+     *ngIf="isOn"></ion-searchbar> -->
+
+     
+    <ion-title  *ngIf="!isOn">
+      <div class="titlediv">
+        <img style="float: left;" height="25" src="../../assets/icon/logom1.png">
+        <div style="margin-left: 5px; float: left;">SPOTSWOPPER</div>
+      </div>
     </ion-title>
+    
+
+    <ion-buttons slot="end" *ngIf="!isOn" (click)="toggleSearchbar()">
+        <ion-icon style="font-size: 24px; margin-right: 2px; color: white" name="search"></ion-icon>
+    </ion-buttons>
+
+    <ion-buttons slot="end" *ngIf="isOn" (click)="toggleSearchbar()">
+        <ion-icon style="font-size: 24px; margin-right: 2px; color: white" name="close"></ion-icon>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-    <ion-card class="welcome-card">
+<ion-content #content class="contentdiv">
+
+  <!-- The map -->
+    <div #mymap id="map">
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- <ion-card class="welcome-card">
       <img src="/assets/shapes.svg" alt="" />
       <ion-card-header>
         <ion-card-subtitle>Get Started</ion-card-subtitle>
@@ -40,5 +113,10 @@
         <ion-icon slot="start" color="medium" name="color-fill"></ion-icon>
         <ion-label>Theme Your App</ion-label>
       </ion-item>
-    </ion-list>
+    </ion-list> -->
 </ion-content>
+
+
+<!-- <ion-footer>
+
+</ion-footer> -->

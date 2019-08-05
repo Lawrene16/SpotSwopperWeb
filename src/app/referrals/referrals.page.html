@@ -1,0 +1,34 @@
+<ion-header>
+    <ion-toolbar  color="dark">
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+          </ion-buttons>
+  
+      <ion-title>REFERRALS</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+<ion-content>
+  <br>
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="arrow-dropdown" 
+          pullingText="Pull to refresh" refreshingSpinner="circles"
+          refreshingText="Refreshing...">
+        </ion-refresher-content>
+      </ion-refresher>
+  
+  
+    <p *ngIf="isempty" align="center"  style="margin: 5px">
+        You have no referrals yet. Share your referral code {{refcode}} to friends to invite them and get <b style="color: #fe3300">5%!!</b> of their first purchase!!
+    </p>
+
+    <ion-item *ngFor="let ref of refereeslist">
+      <ion-label>
+        {{ref.email}}
+      </ion-label>
+      <ion-icon name="ios-person-outline" item-left>
+  
+      </ion-icon>
+    </ion-item>
+  
+</ion-content>

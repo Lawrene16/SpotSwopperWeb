@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar  color="dark">
+      <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+
+    <ion-title>HISTORY</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>   
+
+    <br>
+
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content pullingIcon="arrow-dropdown" 
+          pullingText="Pull to refresh" refreshingSpinner="circles"
+          refreshingText="Refreshing...">
+        </ion-refresher-content>
+      </ion-refresher>
+  
+    <p *ngIf="isempty" align="center" style="margin: 5px">
+      You have not done any transactions yet. Buy or sell a spot!!
+    </p>
+  
+    <ion-item *ngFor="let transaction of transactionlist">
+      <ion-row class="transactions">
+        <ion-col>
+          <b>{{transaction.aboutspot.pintype}}</b><br>
+          {{transaction.desctoshow}}
+          <!-- <p>{{transaction.aboutspot.description}}</p> -->
+  
+  
+        </ion-col>
+  
+        <ion-col col-1>
+          <b>${{transaction.pricetoshow}}</b>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+  </ion-content>

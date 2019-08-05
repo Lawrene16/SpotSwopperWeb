@@ -1,5 +1,7 @@
 {
   "name": "SpotSwopper",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

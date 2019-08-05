@@ -1,0 +1,76 @@
+.content_bg{
+    background-image: url('../../assets/icon/backgroundimg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+}
+
+
+// .loginbtns{
+//     // height: 40px;
+//     color: black;
+//     opacity: 20%;
+//     background-color: #fe3300;
+// }
+
+// .custom-icon {
+//     // font-size: 64px;
+//     color : white;
+//   }
+
+//   .sometext{
+//     color: #7ed420;
+//   }
+
+.itemclass{
+    height: 20px;
+    align-content: center;
+    // background:color($colors, grey);
+    background: rgba(158, 158, 158, 0.6);
+    padding-left: 10px;
+    opacity: 0.3;
+    margin-bottom: 12px;
+    color: white;
+    border-radius: 20px;    
+}
+
+
+.items{
+    height: 45px;
+    border-radius: 20px; 
+    display: flex;
+    align-items: center;   
+    background-color: rgba(158, 158, 158, 0.15);
+
+}
+
+.myinput{
+  margin-top: 5px;
+  margin-left: 6px;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.testclass{
+    padding-right: 30px;
+}
+
+.knowrow{
+    justify-content: center; 
+    margin-top: 10px; 
+    margin-bottom: 10px; 
+    
+    font-size: 16px;
+    color: #9e9e9e;
+}
+
+ion-input {
+    &.custom-input {
+      font-size: 20px; //sets text font size
+      ::placeholder {
+        font-size: 18px; 
+        color: rgba(255, 255, 255, 0.3);//sets placeholder font size
+      }
+    }
+  }
