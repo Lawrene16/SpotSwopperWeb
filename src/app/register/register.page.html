@@ -1,0 +1,139 @@
+<ion-content>
+
+    <div class="content_bg" padding>
+  
+      <!-- Top part with logo -->
+      <ion-grid>
+        <ion-row style="justify-content: center;">
+          <div>
+            <img alt="logo" height="50" class="timg" src="../../assets/icon/logom1.png">
+          </div>
+          <div style="margin-top: 5px; font-size: 26px; color:white; padding-left: 5px;">SPOTSWOPPER</div>
+        </ion-row>
+        <ion-row class="knowrow">Know where you stand</ion-row>
+      </ion-grid>
+  
+      <!-- Seperator -->
+      <div style="margin-top: 1vh"></div>
+  
+      <!-- Form -->
+      <div>
+          <div class="items">
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="1">
+                    <ion-icon style="font-size: 26px; color: rgba(255, 255, 255, 0.3)" start name="ios-contact"></ion-icon>
+                  </ion-col>
+                  <ion-col>
+                      <ion-input no-padding placeholder="Email" [(ngModel)]="email" class="myinput" type="email" required>
+                      </ion-input>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </div>
+        
+            <!-- Seperator -->
+            <div style="margin-top: 1vh"></div>
+            <div class="items">
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="1">
+                      <ion-icon style="font-size: 26px; color: rgba(255, 255, 255, 0.3)" start name="ios-lock"></ion-icon>
+                    </ion-col>
+                    <ion-col>
+                        <ion-input no-padding placeholder="Password" [(ngModel)]="password" class="myinput" type="password" required>
+                        </ion-input>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </div>
+
+
+                          <!-- Seperator -->
+            <div style="margin-top: 1vh"></div>
+              <div class="items">
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="1">
+                        <ion-icon style="font-size: 26px; color: rgba(255, 255, 255, 0.3)" start name="ios-lock"></ion-icon>
+                      </ion-col>
+                      <ion-col>
+                          <ion-input no-padding placeholder="Password" [(ngModel)]="confirmpassword" class="myinput" type="password" required>
+                          </ion-input>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </div>
+
+                
+                            <!-- Seperator -->
+            <div style="margin-top: 1vh"></div>
+                <div class="items">
+                    <ion-grid>
+                      <ion-row>
+                        <ion-col size="1">
+                          <ion-icon style="font-size: 26px; color: rgba(255, 255, 255, 0.3)" start name="ios-people"></ion-icon>
+                        </ion-col>
+                        <ion-col>
+                            <ion-input no-padding placeholder="Referral Code" [(ngModel)]="registerrefnumber" class="myinput" type="text" required>
+                            </ion-input>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </div>
+      </div>
+  
+    <div style="margin-top: 3vh"></div>
+  
+    <div>
+        <ion-button  expand="round" style="width: 100%; height: 35px;" color="danger" (click)="registerNewUser()">SIGN UP</ion-button>
+    </div>
+  
+    <div style="margin-top: 3vh"></div>
+    <div align="center" style="color: white; font-size: 14px; opacity: 0.9; margin-top: 50dp">By signing up you agree to
+        our <u style="color: #fe3300">Terms of use</u></div>
+      <br>
+
+    <!-- Seperator -->
+    <div style="margin-top: 1vh"></div>
+    <div align="center" style="color: white; font-size: 16px; opacity: 0.9;">---------------OR----------------</div>
+
+  
+    <!-- Seperator -->
+  <div style="margin-top: 2vh"></div>
+  <div  align="center" class="knowrow">Login with your social networks</div>
+  
+  
+  
+    <!-- Seperator -->
+    <div style="margin-top: 3vh"></div>
+  
+  <div>
+
+  
+      <ion-grid>
+        
+        <ion-row style="justify-content: center; padding-left: 20px;" >
+  
+          <div class="testclass" (click)="fblogin()">
+                  <img style="zoom:10%;" src="../../assets/icon/facebook.svg">
+          </div>
+  
+          <div class="testclass" (click)="googleLogin()">
+                    <img style="zoom:10%;" src="../../assets/icon/google.svg">
+          </div>
+          </ion-row>
+      </ion-grid>
+      
+  </div>
+  
+  
+    <!-- Seperator -->
+    <div style="margin-top: 1.5vh"></div>
+  
+  <div align="center" style="text-align:center;" (click)="createaccount()">
+      <ion-label style="color:white; font-size: 17px;" >Dont have an account? Sign Up</ion-label>
+  </div>
+  
+    </div>
+  </ion-content>

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, ToastController, MenuController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import * as firebase from 'firebase';
 
+import { AuthService } from '../auth.service';
 
 
 @Component({
@@ -16,12 +17,30 @@ export class LoginPage implements OnInit {
   email = "a@gmail.com";
   password = "aaaaaaaa";
   firedata = firebase.database();
+  myrefnumber;
+  myreflink = "";
 
   constructor(private router: Router,
     private storage: Storage,
-    private loadingCtrl: LoadingController) { }
+    private auth: AuthService,
+    private menu: MenuController,
+    private toastController: ToastController,
+    private loadingCtrl: LoadingController) { 
+      this.menu.enable(false, 'custom');
+
+    }
 
   ngOnInit() {
+
+  }
+
+  ngAfterViewInit(){
+    this.myrefnumber = this.getRandomInt(19283, 30000);
+    this.myreflink = "SPOT" + this.myrefnumber + "SWOPPER";
+  }
+
+  getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
   signin(){
@@ -49,4 +68,117 @@ export class LoginPage implements OnInit {
   }
 
 
+  createaccount(){
+    this.router.navigateByUrl('register');
+  }
+
+  
+  fblogin() {
+    this.auth.facebookNativeLogin().then((res:any) => {
+      this.loadingCtrl.create({
+        message: 'Logging you in',
+      }).then((load) =>{
+          load.present();
+          this.checkIfUserExits(res.uid).then((isthereuser) => {
+            this.presentToast(isthereuser)
+            switch (isthereuser) {
+              case true:
+                this.loadUserDetails(load);
+                break;
+              case false:
+                this.storeUserStuff(res.displayName, res.email, res.photoURL, load);
+                break;
+            }
+          }).catch((err) => {
+            console.log(err)
+            this.presentToast(err);
+          });
+      });
+    }).catch((err) => {
+      this.presentToast(err);
+      console.log(err);
+    });
+  }
+
+
+  googleLogin(){
+    this.auth.googleNativeLogin().then((res:any) =>{
+
+      console.log(res);
+      this.loadingCtrl.create({
+        message: 'Logging you in',
+      }).then((load) =>{
+        load.present();
+        this.checkIfUserExits(res.uid).then((isthereuser) =>{
+          // this.presentToast(isthereuser)
+            switch (isthereuser) {
+              case true:
+                this.loadUserDetails(load);
+                break;
+              case false:
+                this.storeUserStuff(res.displayName, res.email, res.photoURL, load);
+                break;
+            }
+          }).catch((err) => {
+            this.presentToast(err);
+            console.log(err);
+          });
+      })
+    }).catch((err) => {
+      this.presentToast(err)
+      console.log(err);
+    });
+  }
+
+
+  storeUserStuff(name, email, photo, load) {
+
+    console.log(firebase.auth().currentUser.uid)
+    this.firedata.ref('/users').child(firebase.auth().currentUser.uid).set({
+      name: name,
+      balance: 15,
+      email: email,
+      refnumber: this.myrefnumber,
+      referee: "",
+      referallink: this.myreflink,
+      referrals: "",
+      uid: firebase.auth().currentUser.uid,
+      photoURL: photo,
+      purchased: "",
+      sold: "",
+      listed: ""
+    }).then(() => {
+      this.firedata.ref('/users').child(firebase.auth().currentUser.uid).once('value', snapshot => {
+        // console.log(snapshot.val());
+        this.storage.set('userdetails', snapshot.val()).then(() => {
+
+          this.router.navigateByUrl('/home');
+          if (load != null) {
+            load.dismiss();
+          }
+        });
+      });
+    }).catch((err) =>{
+      this.presentToast(err)
+    });
+  }
+
+  checkIfUserExits(userId) {
+    return new Promise((resolve, reject) => {
+      firebase.database().ref('/users').child(userId).once('value', (snapshot) => {
+        var exists = (snapshot.val() !== null);
+        resolve(exists)
+      }).catch((err) => {
+        reject(err);
+      });
+    });
+  }
+
+  async presentToast(message) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000
+    });
+    toast.present();
+  }
 }

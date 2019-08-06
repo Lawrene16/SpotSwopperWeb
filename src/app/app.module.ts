@@ -17,6 +17,12 @@ import { IonicStorageModule } from '@ionic/storage'
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { AuthService } from './auth.service';
+import { Facebook } from '@ionic-native/facebook/ngx';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
+
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+
 
 
 var firebaseconfig = {
@@ -46,6 +52,10 @@ firebase.initializeApp(firebaseconfig);
   providers: [
     StatusBar,
     SplashScreen,
+    Geolocation,
+    Facebook,
+    GooglePlus,
+    AuthService,
     SocialSharing,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

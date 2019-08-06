@@ -3,13 +3,12 @@
     background-repeat: no-repeat;
     background-size: cover;
     width: 100%;
-    height: 100%;
+    height: 106%;
 }
 
 .itemclass{
     height: 20px;
     align-content: center;
-    // background:color($colors, grey);
     background: rgba(158, 158, 158, 0.6);
     padding-left: 10px;
     opacity: 0.3;
@@ -43,7 +42,6 @@
     justify-content: center; 
     margin-top: 10px; 
     margin-bottom: 10px; 
-    
     font-size: 16px;
     color: #9e9e9e;
 }
