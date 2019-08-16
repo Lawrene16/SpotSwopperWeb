@@ -39,6 +39,10 @@ export class HomePage {
   };
   map: any;
   globalmarker;
+
+  truelocationmarker;
+  markerposbeforetrueclick;
+
   globaldetailsinfowindow;
   globalpriceinfowindow;
   savedremovedmarkers = [];
@@ -296,11 +300,15 @@ export class HomePage {
     this.markerslist.push(marker);
     priceinfoWindow.open();
 
+    // Infowindow to show as the owner
     if(firebaseSpot.pinowner == firebase.auth().currentUser.uid){
         detailsinfoWindow.setContent(this.initDetailsInfoWindow(firebaseSpot, 1))
     }
-    else{
-      // console.log(firebaseSpot.buyers)
+
+    // If the user has bought the spot
+    else if(JSON.stringify(firebaseSpot.buyers).includes(firebase.auth().currentUser.uid)){
+      // console.log('I am a buyer')
+      detailsinfoWindow.setContent(this.initDetailsInfoWindow(firebaseSpot, 2))
     }
 
     // Pinuid is for the fetched pins when clicked 
@@ -315,10 +323,16 @@ export class HomePage {
         }
         priceinfoWindow.close();
         detailsinfoWindow.open();
+
+
         this.globaldetailsinfowindow = detailsinfoWindow;
         this.globalpriceinfowindow = priceinfoWindow;
+        this.truelocationmarker = {
+          initialmarkerpos: marker.getPosition(),
+          spot: firebaseSpot,
+          marker: marker
+        };
       })
-
     })
 
     this.map.addListener('click', () =>{
@@ -333,7 +347,7 @@ export class HomePage {
 
       // Others
       case 0:
-          spotdetailsstring = '<div style="z-index: 7">' +
+          spotdetailsstring = '<div>' +
           '<div style="background-color: #ebebeb; padding: 6px; width: 100%; text-align: center">' +
           '<b style="font-size: 13px">' + firebaseSpot.pintype + '</b>' +
           '</div>' +
@@ -352,7 +366,7 @@ export class HomePage {
 
         // Owner
         case 1:
-          spotdetailsstring = '<div style="z-index: 7">' +
+          spotdetailsstring = '<div>' +
           '<div style="background-color: #ebebeb; padding: 6px; width: 100%; text-align: center">' +
           '<b style="font-size: 13px">' + firebaseSpot.pintype + '</b>' +
           '</div>' +
@@ -370,7 +384,7 @@ export class HomePage {
 
         // Has bought it
         case 2:
-            spotdetailsstring = '<div style="z-index: 7">' +
+            spotdetailsstring = '<div>' +
             '<div style="background-color: #ebebeb; padding: 6px; width: 100%; text-align: center">' +
             '<b style="font-size: 13px">' + firebaseSpot.pintype + '</b>' +
             '</div>' +
@@ -404,6 +418,7 @@ export class HomePage {
     });
   }
 
+  // Presents a toast to the user
   async presentToast(message) {
     const toast = await this.toastCtrl.create({
       message: message,
@@ -414,7 +429,7 @@ export class HomePage {
     toast.present();
   }
 
-  // Take user to purchase spot
+  // Take user to purchase spot page
   purchaseSpot(){
     if (firebase.auth().currentUser == null) {
       this.router.navigateByUrl('/login')
@@ -423,8 +438,12 @@ export class HomePage {
     }
   }
 
+  // View the true location of the spot
   viewTrueLocation(){
-
+    let latLng = new google.maps.LatLng(this.truelocationmarker.spot.lat, this.truelocationmarker.spot.lat);
+      this.truelocationmarker.marker.setPosition(latLng)
+      this.map.panTo(latLng)
+      this.map.setZoom(this.defaultzoomevel)
   }
 
   // Take user to list spot page
@@ -460,10 +479,13 @@ export class HomePage {
       animation: google.maps.Animation.BOUNCE
     });
     this.globalmarker = marker;
-    map.setZoom(this.defaultzoomevel);
+
+    if(map.getZoom() <= this.defaultzoomevel ){
+      map.setZoom(this.defaultzoomevel);      
+    }
     map.panTo(marker.getPosition());
 
-    var contentstring = '<div style="z-index: 7;">' +
+    var contentstring = '<div style="margin-right: 10px"">' +
     '<div onClick="window.ionicPageRef.zone.run(function () { window.ionicPageRef.component.listSpot() })" style="width: 100%; text-align: center">' +
     '<div>List Spot</div>' +
     '</div>' +
@@ -494,17 +516,18 @@ export class HomePage {
     listspotinfoWindow.open()
   }
 
-  // Go to your current position when fab is clicked
+  // Goes to your current position when fab is clicked
   gotomypos() {
-        let latLng = new google.maps.LatLng(this.mylocation.lat, this.mylocation.lng);
-        this.map.setZoom(this.defaultzoomevel);
-        this.map.panTo(latLng);
-
-        if(this.globaldetailsinfowindow != undefined){
-          this.globaldetailsinfowindow.close();
-          this.globalpriceinfowindow.open();
-        }
-
+    let latLng = new google.maps.LatLng(this.mylocation.lat, this.mylocation.lng);
+    this.map.setZoom(this.defaultzoomevel);
+    this.map.panTo(latLng);
+    if(this.truelocationmarker != undefined){
+      this.truelocationmarker.marker.setPosition(this.truelocationmarker.initialmarkerpos)
+    }
+    if(this.globaldetailsinfowindow != undefined){
+      this.globaldetailsinfowindow.close();
+      this.globalpriceinfowindow.open();
+    }
   }
 
   // Change icon colors on tab click

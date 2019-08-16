@@ -21,13 +21,12 @@
         You have no referrals yet. Share your referral code <b>{{refcode}}</b> to friends to invite them and get <b style="color: #fe3300">5%!!</b> of their first purchase!!
     </p>
 
-    <ion-item *ngFor="let ref of refereeslist">
+    <ion-item *ngFor="let ref of refereeslist" style="margin-right: 10px">
+        <ion-icon name="ios-person">
+          </ion-icon>
       <ion-label>
         {{ref.email}}
       </ion-label>
-      <ion-icon name="ios-person-outline" item-left>
-  
-      </ion-icon>
     </ion-item>
   
 </ion-content>

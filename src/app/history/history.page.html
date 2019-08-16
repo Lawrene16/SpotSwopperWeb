@@ -21,7 +21,7 @@
       You have not done any transactions yet. Buy or sell a spot!!
     </p>
   
-    <ion-item *ngFor="let transaction of transactionlist">
+    <ion-item *ngFor="let transaction of transactionlist" style="margin-right: 10px">
       <ion-row class="transactions">
         <ion-col style="margin-top: 8px" size="2">
           <ion-icon *ngIf="transaction.type == 'out'" style="font-size: 24px" name="arrow-up" color="danger"></ion-icon>
