@@ -3,7 +3,7 @@
     <name>SpotSwopper</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework.com" href="http://ionicframework.com/">Ionic Framework Team</author>
-    <content original-src="index.html" src="http://192.168.43.108:8101" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -101,6 +101,7 @@
     <plugin name="cordova-plugin-ionic-webview" spec="^4.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-x-socialsharing" spec="5.4.7" />
+    <engine name="android" spec="~7.1.4" />
     <plugin name="cordova-plugin-geolocation" spec="4.0.2">
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
     </plugin>
@@ -108,6 +109,4 @@
         <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.72131126436-nsfl3vi89h0jd6orkhgh570l2asd9fpj" />
         <variable name="PLAY_SERVICES_VERSION" value="11.8.0" />
     </plugin>
-    <allow-navigation href="http://192.168.43.108:8101" sessionid="2a71dcf3" />
-    <engine name="android" spec="7.1.4" />
 </widget>

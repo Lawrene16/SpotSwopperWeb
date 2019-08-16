@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons style="margin-left: 5px" slot="start">
+      <!-- <ion-icon name="arrow-back"></ion-icon> -->
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>List Spot</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content >
+  <div style="padding-left: 10px;padding-right: 10px;padding-top: 15px;">
+      <ion-item class="each_item">
+          <img src="../../assets/icon/price-tag.png" style="margin-right: 15px; zoom: 35%;">
+          <ion-input style="margin-left: 10px" type="number" [(ngModel)]="price" placeholder="Spot Price"></ion-input>
+        </ion-item>
+      
+        <ion-item class="each_item">
+          <img src="../../assets/icon/information.png" style="margin-right: 15px; zoom: 35%;">
+          <ion-input style="margin-left: 10px" type="text" [(ngModel)]="description" placeholder="Spot Description"></ion-input>
+        </ion-item>
+      
+        <ion-item class="each_item">
+            <ion-icon color="warning" src="../../assets/icon/pok-user.svg" style="margin-right: 10px;"></ion-icon>
+            <ion-input type="number" [(ngModel)]="maxbuyers" placeholder="Maximum Number of Buyers"></ion-input>
+        </ion-item>
+      
+        <ion-card class="each_item">
+          <ion-item lines="none">
+            <ion-label style="opacity: 0.7; margin: 10px">Select Type of Spot</ion-label>
+            <ion-select [(ngModel)]="spottype" ok-text="Okay" cancel-text="Dismiss">
+                <ion-select-option value="Spot for Sale">Spot for Sale</ion-select-option>
+                <ion-select-option value="Lease Spot">Lease Spot</ion-select-option>
+                <ion-select-option value="Hunting Spot">Hunting Spot</ion-select-option>
+                <ion-select-option value="Fishing Spot">Fishing Spot</ion-select-option>
+                <ion-select-option value="Private Spot">Private Spot</ion-select-option>          
+              </ion-select>
+          </ion-item>
+        </ion-card>
+      
+        <ion-item lines="none">
+          <ion-label style="opacity: 0.8; font-size: 16px">
+            By checking this box you agree that <br>
+             after verification of this spot if there <br>
+             if there is any false information about<br>
+               this spot, SpotSwopper has the right <br> 
+              to put your account and all funds on<br>
+              hold and refund all who have paid for <br>
+              this spot from your balance<br>
+              </ion-label>
+            <ion-checkbox (ionChange)="chee($event)">
+            </ion-checkbox>
+        </ion-item>
+      
+        <br>
+        <br>
+      
+        <ion-button style="margin-left: 5vw; margin-right: 5vw; margin-top: 10px;" expand="block" color="danger" (click)="listSpot()"><b>LIST SPOT</b></ion-button>
+      
+  </div>
+
+</ion-content>

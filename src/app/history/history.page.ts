@@ -25,7 +25,9 @@ export class HistoryPage implements OnInit {
 
   loadMyTransactions(){
     this.transactionlist = [];
-    this.firedata.ref('/users').child(firebase.auth().currentUser.uid).
+    // this.firedata.ref('/users').child(firebase.auth().currentUser.uid).
+    this.firedata.ref('/users').child('1vaUIbO9TQgTTMZ7jgsF4kZUcE42').
+
     child('transactions').orderByChild('mm').once('value', snapshot => {
       let result = snapshot.val();
       let temparr = [];
@@ -35,6 +37,8 @@ export class HistoryPage implements OnInit {
       temparr.forEach(transaction => {
         if(temparr.length != 0){
          this.transactionlist.push(transaction);
+
+         console.log(transaction)
         }
       });
 
@@ -47,9 +51,6 @@ export class HistoryPage implements OnInit {
   }
 
   doRefresh(refresher) {
-
-    
-
     setTimeout(() => {
       console.log('Async operation has ended');
       refresher.target.complete();

@@ -67,12 +67,6 @@ export class LoginPage implements OnInit {
     });
   }
 
-
-  createaccount(){
-    this.router.navigateByUrl('register');
-  }
-
-  
   fblogin() {
     this.auth.facebookNativeLogin().then((res:any) => {
       this.loadingCtrl.create({
@@ -177,7 +171,8 @@ export class LoginPage implements OnInit {
   async presentToast(message) {
     const toast = await this.toastController.create({
       message: message,
-      duration: 2000
+      duration: 2000,
+      color: 'dark'
     });
     toast.present();
   }

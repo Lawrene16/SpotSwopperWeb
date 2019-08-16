@@ -9,7 +9,6 @@
   </ion-header>
   
 <ion-content>
-  <br>
     <ion-refresher (ionRefresh)="doRefresh($event)">
         <ion-refresher-content pullingIcon="arrow-dropdown" 
           pullingText="Pull to refresh" refreshingSpinner="circles"
@@ -18,7 +17,7 @@
       </ion-refresher>
   
   
-    <p *ngIf="isempty" align="center"  style="margin: 5px">
+    <p *ngIf="isempty" align="center" style="margin-left: 5px; margin-right: 5px; margin-top: 15px">
         You have no referrals yet. Share your referral code <b>{{refcode}}</b> to friends to invite them and get <b style="color: #fe3300">5%!!</b> of their first purchase!!
     </p>
 

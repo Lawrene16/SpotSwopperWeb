@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>InfoPopup - A JavaScript plugin - An alternative of Google's infowindow - By Sarthak Dabhi</title>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 500px;
+        width: 500px;
+        margin: 50px auto;
+      }
+      .pop-up-content {
+        cursor: default;
+      }
+      .width-30 {
+        max-width: 30%;
+        float: left;
+      }
+      .width-70 {
+        float: left;
+        max-width: 70%;
+        padding-left: 10px;
+      }
+      label {
+        font-weight: 500;
+        font-size: 13px;
+      }
+      .center {
+        text-align: center;
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3um1Vz-3kVXqVOvq1wzE2Hbpws56M-IE&libraries=places"></script>
+    <script src="infopopup.js"></script>
+    <script>
+      var california = {lat: 36.778259, lng: -119.417931};
+      var losangeles = {lat:34.052235, lng: -118.243683};
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 6,
+          center: california
+        });
+
+        var marker = new google.maps.Marker({
+          position: california,
+          map: map,
+          title: 'California'
+        });
+
+        var marker1 = new google.maps.Marker({
+          position: losangeles,
+          map: map,
+          title: 'Los Angeles'
+        });
+
+        var options = {
+          'className': 'info-pop-up-content',
+          'background': '#FFFFFF',
+          'padding': '5px',
+          'minWidth': '200', //px
+          'content': '<div class="tile"><div class="width-30"><img src="profile-photo.jpg"></div><div class="width-70"><label>Sarthak Dabhi</label><br>WEB DEVELOPER<br>Website: <a href="http://sarthakdabhi.me/">sarthakdabhi.me</a></div></div>'
+        };
+        var infoPopup = new InfoPopup(marker, map, options);
+
+        var options1 = {
+          'className': 'info-pop-up-content',
+          'background': '#FFFFFF',
+          'padding': '10px 20px'
+        };
+        var infoPopup1 = new InfoPopup(marker1, map, options1);
+      }
+      google.maps.event.addDomListener(window, 'load', initMap);
+    </script>
+  </head>
+  <body>
+    <div class="center">
+      <h4>
+        Infopopup - A JavaScript Plugin - An Google's infowindow alternative
+      </h4>
+    </div>
+    <div id="map"></div>
+    <div class="center">
+      Made with love.
+    </div>
+  </body>
+</html>

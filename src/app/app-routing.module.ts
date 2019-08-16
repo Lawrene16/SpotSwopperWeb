@@ -16,7 +16,9 @@ const routes: Routes = [
   { path: 'history', loadChildren: './history/history.module#HistoryPageModule' },
   { path: 'referrals', loadChildren: './referrals/referrals.module#ReferralsPageModule' },
   { path: 'myaccount', loadChildren: './myaccount/myaccount.module#MyaccountPageModule' },
-  { path: 'register', loadChildren: './register/register.module#RegisterPageModule' }
+  { path: 'register', loadChildren: './register/register.module#RegisterPageModule' },
+  { path: 'listspot', loadChildren: './listspot/listspot.module#ListspotPageModule' },
+  { path: 'purchasespot', loadChildren: './purchasespot/purchasespot.module#PurchasespotPageModule' }
 ];
 
 @NgModule({

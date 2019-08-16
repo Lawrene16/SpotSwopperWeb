@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import * as firebase from 'firebase';
 
+import { HttpClientModule } from '@angular/common/http';
 
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -44,6 +45,7 @@ firebase.initializeApp(firebaseconfig);
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
+    HttpClientModule,    
     IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(firebaseconfig),
     AppRoutingModule

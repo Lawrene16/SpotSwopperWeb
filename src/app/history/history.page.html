@@ -10,9 +10,6 @@
 
 
 <ion-content>   
-
-    <br>
-
     <ion-refresher (ionRefresh)="doRefresh($event)">
         <ion-refresher-content pullingIcon="arrow-dropdown" 
           pullingText="Pull to refresh" refreshingSpinner="circles"
@@ -20,21 +17,23 @@
         </ion-refresher-content>
       </ion-refresher>
   
-    <p *ngIf="isempty" align="center" style="margin: 5px">
+    <p *ngIf="isempty" align="center" style="margin-left: 5px; margin-right: 5px; margin-top: 15px">
       You have not done any transactions yet. Buy or sell a spot!!
     </p>
   
     <ion-item *ngFor="let transaction of transactionlist">
       <ion-row class="transactions">
-        <ion-col>
+        <ion-col style="margin-top: 8px" size="2">
+          <ion-icon *ngIf="transaction.type == 'out'" style="font-size: 24px" name="arrow-up" color="danger"></ion-icon>
+          <ion-icon *ngIf="transaction.type == 'in'" style="font-size: 24px" name="arrow-down" color="secondary"></ion-icon>
+        </ion-col>
+        <ion-col size="8">
           <b>{{transaction.aboutspot.pintype}}</b><br>
-          {{transaction.desctoshow}}
+          <span style="font-size: 14px">{{transaction.desctoshow}}</span>
           <!-- <p>{{transaction.aboutspot.description}}</p> -->
-  
-  
         </ion-col>
   
-        <ion-col col-1>
+        <ion-col size="2">
           <b>${{transaction.pricetoshow}}</b>
         </ion-col>
       </ion-row>

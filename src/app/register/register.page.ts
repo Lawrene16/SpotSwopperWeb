@@ -147,7 +147,6 @@ export class RegisterPage implements OnInit {
     });
   }
 
-
   googleLogin(){
     this.auth.googleNativeLogin().then((res:any) =>{
 
@@ -227,7 +226,8 @@ export class RegisterPage implements OnInit {
   async presentToast(message) {
     const toast = await this.toastController.create({
       message: message,
-      duration: 2000
+      duration: 2000,
+      color: 'dark'
     });
     toast.present();
   }
