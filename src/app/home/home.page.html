@@ -30,6 +30,13 @@
 </ion-header> -->
 
 <div class="mynavbar">
+    <!-- Floating search list -->
+    <ion-list class="floatinglist" [hidden]="autocompleteItems.length == 0">
+        <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+          {{ item.description }}
+        </ion-item>
+      </ion-list>
+      
   <ion-row style="height: 45px; padding: 0px">
     <ion-col size="1.5">
       <ion-menu-button color="light"></ion-menu-button>
@@ -45,14 +52,17 @@
         SPOTSWOPPER
       </div>
 
+      <!-- Searchbar -->
       <div class="test" *ngIf="isOn">
-          <ion-searchbar no-padding 
-          #topsearch
-        placeholder="Search by address/zip"
-        [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()"
-           ></ion-searchbar>
+        <!-- <ion-input style="color: white; height: 35px;" no-padding placeholder="Search by Address/Zip">
+
+        </ion-input> -->
+        <ion-searchbar style="height: 35px; color: white" no-padding #topsearch placeholder="Search by address/zip"
+          [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()"></ion-searchbar>
       </div>
     </ion-col>
+
+    <!-- Search and close button -->
     <ion-col (click)="toggleSearchbar()"
       style="width: 100%; height: 100%; text-align: end; vertical-align: middle; line-height: 45px;" size="1.5">
       <ion-icon *ngIf="!isOn" style="font-size: 24px; margin-right: 2px; color: white" name="search"></ion-icon>

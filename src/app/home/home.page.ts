@@ -35,15 +35,21 @@ export class HomePage {
   map: any;
   globalmarker;
   truelocationmarker;
+  searchpinmarker;
   markerposbeforetrueclick;
   removedmarkers = [];
   globaldetailsinfowindow;
   globalpriceinfowindow;
   firebaseArray: any = [];
+  searchedplaces = [];
   markerslist: any = [];
 
   // Other Variables
   defaultzoomevel = 16;
+  autocomplete: any;
+  GoogleAutocomplete;
+  geocoder;
+  autocompleteItems = [];
   defaultloadradius = 25;
   mindefmarkerrandomgap = 10;
   mylocation;
@@ -63,12 +69,18 @@ export class HomePage {
   ) {
     Window["myComponent"] = this;
     (<any>window).ionicPageRef = { zone: this.ngZone, component: this };
+    this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
+    this.autocomplete = { input: '' };
+    this.autocompleteItems = [];
+    this.geocoder = new google.maps.Geocoder;
   }
 
   toggleSearchbar() {
-    // this.ngZone.run(() =>{
+    this.ngZone.run(() =>{
     this.isOn = !this.isOn;
-    // })
+      this.autocompleteItems = [];
+      this.autocomplete.input = "";
+    })
   }
 
   ionViewWillEnter() {
@@ -195,7 +207,7 @@ export class HomePage {
     var priceinfoWindow = new SnazzyInfoWindow({
       marker: marker,
       borderRadius: "5px",
-      panOnOpen: true,
+      panOnOpen: false,
       placement: "bottom",
       showCloseButton: false,
       closeOnMapClick: false,
@@ -221,7 +233,7 @@ export class HomePage {
       placement: "top",
       closeOnMapClick: true,
       showCloseButton: false,
-      panOnOpen: true,
+      panOnOpen: false,
       offset: {
         top: "2px",
         left: "12px"
@@ -438,6 +450,45 @@ export class HomePage {
     this.map.setZoom(this.defaultzoomevel);
   }
 
+  // Update search results
+  updateSearchResults() {
+    if (this.autocomplete.input == '') {
+      this.autocompleteItems = [];
+      return;
+    }
+    // console.log("predictions");
+
+    this.GoogleAutocomplete.getPlacePredictions({ input: this.autocomplete.input },
+      (predictions, status) => {
+        this.autocompleteItems = [];
+        this.ngZone.run(() => {
+          predictions.forEach((prediction) => {
+            this.autocompleteItems.push(prediction);
+          });
+        });
+      });
+  }
+
+  // On search result selected
+  selectSearchResult(item) {
+    // this.clearMarkers();
+    this.autocompleteItems = [];
+    this.geocoder.geocode({ 'placeId': item.place_id }, (results, status) => {
+      if (status === 'OK' && results[0]) {
+        this.searchpinmarker = new google.maps.Marker({
+          position: results[0].geometry.location,
+          map: this.map,
+        });
+        this.map.setCenter(results[0].geometry.location);
+
+        if(!this.searchedplaces.includes(item.place_id)){
+          this.drawMarkersInCircle(this.searchpinmarker);
+          this.searchedplaces.push(item.place_id)
+        }
+      }
+    })
+  }
+
   // Take user to list spot page
   listSpot() {
     this.getdist();
@@ -531,6 +582,8 @@ export class HomePage {
 
   // Goes to your current position when fab is clicked
   gotomypos() {
+    this.autocompleteItems = [];
+
     let latLng = new google.maps.LatLng(
       this.mylocation.lat,
       this.mylocation.lng
@@ -546,6 +599,7 @@ export class HomePage {
       this.globaldetailsinfowindow.close();
       this.globalpriceinfowindow.open();
     }
+    console.log(this.searchedplaces)
   }
 
   // Change icon colors on tab click
