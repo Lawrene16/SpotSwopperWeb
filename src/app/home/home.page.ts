@@ -3,9 +3,7 @@ import { Storage } from "@ionic/storage";
 import { Geolocation } from "@ionic-native/geolocation/ngx";
 import { LoadingController, ToastController } from "@ionic/angular";
 import * as firebase from "firebase";
-import { Router } from '@angular/router';
-
-
+import { Router } from "@angular/router";
 
 declare var require: any;
 
@@ -16,10 +14,7 @@ declare var google: any;
   templateUrl: "home.page.html",
   styleUrls: ["home.page.scss"]
 })
-
-
 export class HomePage {
-  
   // Viewchildren
   @ViewChild("mymap", { static: false }) mapElement: ElementRef;
 
@@ -39,20 +34,14 @@ export class HomePage {
   };
   map: any;
   globalmarker;
-
   truelocationmarker;
   markerposbeforetrueclick;
-
+  removedmarkers = [];
   globaldetailsinfowindow;
   globalpriceinfowindow;
-  savedremovedmarkers = [];
-  purchasedSpotsArray = [];
-  soldSpotsArray = [];
-  listedSpotsAray = [];
   firebaseArray: any = [];
-  markerslist:any = [];
+  markerslist: any = [];
 
-  
   // Other Variables
   defaultzoomevel = 16;
   defaultloadradius = 25;
@@ -62,6 +51,7 @@ export class HomePage {
   firedata = firebase.database();
   unselected = "light";
   selected = "primary";
+
 
   constructor(
     private storage: Storage,
@@ -76,22 +66,25 @@ export class HomePage {
   }
 
   toggleSearchbar() {
+    // this.ngZone.run(() =>{
     this.isOn = !this.isOn;
+    // })
   }
 
   ionViewWillEnter() {
-    this.ngZone.run(() =>{
+    this.ngZone.run(() => {
       this.geolocation
-      .getCurrentPosition().then(resp => {
-          this.loadMap(resp.coords); 
+        .getCurrentPosition()
+        .then(resp => {
+          this.loadMap(resp.coords);
           this.mylocation = {
             lat: resp.coords.latitude,
             lng: resp.coords.longitude
-          }     
-      })
-      .catch(err => {
-        console.log(err);
-      });
+          };
+        })
+        .catch(err => {
+          console.log(err);
+        });
     });
   }
 
@@ -99,9 +92,13 @@ export class HomePage {
   createRandomPointInCircle(centerPoint, radius) {
     var angle = Math.random() * Math.PI * 2;
     var x =
-      Math.cos(angle) * this.getRandomArbitrary(this.mindefmarkerrandomgap / 10000, radius) + centerPoint.x;
+      Math.cos(angle) *
+        this.getRandomArbitrary(this.mindefmarkerrandomgap / 10000, radius) +
+      centerPoint.x;
     var y =
-      Math.sin(angle) * this.getRandomArbitrary(this.mindefmarkerrandomgap / 10000, radius) + centerPoint.y;
+      Math.sin(angle) *
+        this.getRandomArbitrary(this.mindefmarkerrandomgap / 10000, radius) +
+      centerPoint.y;
     return new google.maps.Point(x, y);
   }
 
@@ -133,7 +130,7 @@ export class HomePage {
       this.newmarkerlocation = {
         lat: e.latLng.lat(),
         lng: e.latLng.lng()
-      }  
+      };
     });
   }
 
@@ -141,125 +138,58 @@ export class HomePage {
   drawMarkersInCircle(defmarker) {
     // Important!!! when a spot is being pinned it should send the src nd size to firebase so we dont have long crap everywhere
     this.loadingCtrl.create({
-      message: "Fetching spots 20 miles from your current location"
-    }).then(res => {
-        // Loading variables that will be used
+        message: "Fetching spots 20 miles from your current location"
+      }).then(res => {
         res.present();
         this.getdist();
         var proj = this.map.getProjection();
         var centerPoint = proj.fromLatLngToPoint(defmarker.getPosition());
         var radius = this.defaultloadradius / 10000;
-       
+        var loc1 = defmarker.getPosition();
         this.firedata.ref("/allpins").orderByChild("mjbmmn").once("value", snapshot => {
-
-          this.firebaseArray = [];
+            this.firebaseArray = [];
             let result = snapshot.val();
-            let temparr = [];
             for (var key in result) {
-              temparr.push(result[key]);
+              this.firebaseArray.push(result[key]);
             }
-            var loc1 = defmarker.getPosition();
             res.dismiss();
-            temparr.forEach(firebaseSpotFetched => {
-              this.firebaseArray.push(firebaseSpotFetched);
-            });
             this.firebaseArray.forEach(firebaseSpot => {
               var loc2 = new google.maps.LatLng(
                 firebaseSpot.lat,
                 firebaseSpot.lng
               );
               var dist = loc2.distanceFrom(loc1);
-
               // distance check condition
               // if (dist / 1000 < 3) {
 
-                // different infostrings
-                // this.switchSpotIcons(firebaseSpot);
+              // this.switchSpotIcons(firebaseSpot);
+              var point = this.createRandomPointInCircle(centerPoint, radius);
+              var pos = proj.fromPointToLatLng(point);
+              this.initPriceInfowindow(pos, firebaseSpot);
 
-                var point = this.createRandomPointInCircle(centerPoint, radius);
-                var pos = proj.fromPointToLatLng(point);
+              // this.loadSpotsForBottom();
+              var uniquemarkerslist = this.markerslist.filter((item, pos) => {
+                return this.markerslist.indexOf(item) == pos;
+              })
+              this.markerslist = uniquemarkerslist;
 
-                // if (firebaseSpot.pinowner == firebase.auth().currentUser.uid) {
-                  // pos = new google.maps.LatLng(firebaseSpot.lat, firebaseSpot.lng)
-
-                // } else {
-                //   pos = proj.fromPointToLatLng(point);
-                // }
-
-                this.initPriceInfowindow(pos, firebaseSpot)
-
-
-              // }
             });
-
-            //       this.map.panTo(defmarker.getPosition());
-
-            //       marker.addListener('click', (event) => {
-            //         this.storage.set("spottopurchase", firebaseSpot);
-            //         // ratinginfowindow.close();
-
-            //         // this.ratingsInfowArray.forEach(windowe => { console.log(windowe.close()) })
-
-            //         // buyerstemparr.forEach(firebasebuyer => {
-            //         //   if (firebase.auth().currentUser.uid != firebasebuyer && firebaseSpot.pinowner != firebase.auth().currentUser.uid) {
-            //         //     spotdetailsinfowindow.setContent(spotdetailsstring);
-            //         //     spotdetailsinfowindow.open(this.map, marker);
-            //         //     // console.log(firebasebuyer)
-            //         //   }
-            //         //   else if (firebase.auth().currentUser.uid == firebasebuyer) {
-            //         //     spotdetailsinfowindow.setContent(spotdetailsifpaidfor);
-            //         //     this.storage.set('purchasedtoview', firebaseSpot)
-            //         //     spotdetailsinfowindow.open(this.map, marker);
-
-            //         //     // console.log(firebasebuyer)
-            //         //   }
-            //         //   else if (firebaseSpot.pinowner == firebase.auth().currentUser.uid) {
-            //         //     this.storage.set('pintoremove', firebaseSpot.pinuid);
-            //         //     spotdetailsinfowindow.setContent(ownerstring);
-            //         //     // ratinginfowindow.close();
-            //         //     spotdetailsinfowindow.open(this.map, marker);
-            //         //   }
-            //         // })
-            //       });
-
-            //       // google.maps.event.addListener(spotdetailsinfowindow, 'closeclick', function () {
-            //       //   spotdetailsinfowindow.close();
-            //       //   if (firebaseSpot.pintype != "Saved Spot" && marker.getMap() != null) {
-            //       //     ratinginfowindow.open(this.map, marker);
-            //       //     // console.log(firebase.auth().currentUser.uid);
-            //       //   }
-            //       // });
-            //       // this.markerlist.push({ uid: firebaseSpot.pinuid, markertouse: marker });
-            //       // this.markerlist.push({ spot: firebaseSpot, markertouse: marker });
-
-            //       // this.loadSpotsForBottom();
-
-            //     });
-            //   }
-            // })
           })
           .catch(err => {
             res.dismiss();
             console.log(err);
           });
-
-        // var uniquemarkerslist = this.markerlist.filter((item, pos) => {
-        //   return this.markerlist.indexOf(item) == pos;
-        // })
-
-        // this.markerlist = uniquemarkerslist;
       });
   }
 
   // price Infowindow is init here
-  initPriceInfowindow(position, firebaseSpot:any){
-
+  initPriceInfowindow(position, firebaseSpot: any) {
     const SnazzyInfoWindow = require("snazzy-info-window");
     var marker = new google.maps.Marker({
       position: position,
       map: this.map,
       icon: this.switchSpotIcons(firebaseSpot),
-      title: ''
+      title: ""
     });
 
     var priceinfoWindow = new SnazzyInfoWindow({
@@ -273,10 +203,14 @@ export class HomePage {
         top: "25px",
         left: "14px"
       },
-      pointer: '3px',
-      padding: '1px',
-      fontSize: '12px',
-      content: '<div style="padding-left: 8px; padding-right: 8px">' + '$' + firebaseSpot.price+ '</div>'
+      pointer: "3px",
+      padding: "1px",
+      fontSize: "12px",
+      content:
+        '<div style="padding-left: 8px; padding-right: 8px">' +
+        "$" +
+        firebaseSpot.price +
+        "</div>"
     });
 
     var detailsinfoWindow = new SnazzyInfoWindow({
@@ -292,38 +226,40 @@ export class HomePage {
         top: "2px",
         left: "12px"
       },
-      pointer: '5px',
-      padding: '0px',
-      fontSize: '12px',
+      pointer: "5px",
+      padding: "0px",
+      fontSize: "12px",
       content: this.initDetailsInfoWindow(firebaseSpot, 0)
     });
-    this.markerslist.push(marker);
+    // this.markerslist.push(marker);
     priceinfoWindow.open();
 
     // Infowindow to show as the owner
-    if(firebaseSpot.pinowner == firebase.auth().currentUser.uid){
-        detailsinfoWindow.setContent(this.initDetailsInfoWindow(firebaseSpot, 1))
+    if (firebaseSpot.pinowner == firebase.auth().currentUser.uid) {
+      detailsinfoWindow.setContent(this.initDetailsInfoWindow(firebaseSpot, 1));
     }
 
     // If the user has bought the spot
-    else if(JSON.stringify(firebaseSpot.buyers).includes(firebase.auth().currentUser.uid)){
-      // console.log('I am a buyer')
-      detailsinfoWindow.setContent(this.initDetailsInfoWindow(firebaseSpot, 2))
+    else if (
+      JSON.stringify(firebaseSpot.buyers).includes(
+        firebase.auth().currentUser.uid
+      )
+    ) {
+      detailsinfoWindow.setContent(this.initDetailsInfoWindow(firebaseSpot, 2));
     }
 
-    // Pinuid is for the fetched pins when clicked 
-    marker.addListener('click', () => {
-      this.storage.set('spotdetails', firebaseSpot).then(() =>{
+    // Pinuid is for the fetched pins when clicked
+    marker.addListener("click", () => {
+      this.storage.set("spotdetails", firebaseSpot).then(() => {
         this.map.setZoom(this.defaultzoomevel);
         this.map.panTo(marker.getPosition());
-  
-        if(this.globaldetailsinfowindow != undefined){
-            this.globaldetailsinfowindow.close();
-            this.globalpriceinfowindow.open();
+
+        if (this.globaldetailsinfowindow != undefined) {
+          this.globaldetailsinfowindow.close();
+          this.globalpriceinfowindow.open();
         }
         priceinfoWindow.close();
         detailsinfoWindow.open();
-
 
         this.globaldetailsinfowindow = detailsinfoWindow;
         this.globalpriceinfowindow = priceinfoWindow;
@@ -332,88 +268,141 @@ export class HomePage {
           spot: firebaseSpot,
           marker: marker
         };
-      })
-    })
+      });
+    });
 
-    this.map.addListener('click', () =>{
-        priceinfoWindow.open();        
-    })
+    this.map.addListener("click", () => {
+      priceinfoWindow.open();
+    });
+
+    this.markerslist.push({
+       spot: firebaseSpot,
+        markertouse: marker, 
+        pricewindow: priceinfoWindow, 
+        detailswindow: detailsinfoWindow
+       });
   }
 
   // Init details infowindow
-  initDetailsInfoWindow(firebaseSpot, index){
+  initDetailsInfoWindow(firebaseSpot, index) {
     var spotdetailsstring;
     switch (index) {
-
       // Others
       case 0:
-          spotdetailsstring = '<div>' +
+        spotdetailsstring =
+          "<div>" +
           '<div style="background-color: #ebebeb; padding: 6px; width: 100%; text-align: center">' +
-          '<b style="font-size: 13px">' + firebaseSpot.pintype + '</b>' +
-          '</div>' +
-          '<div style="font-size: 12px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 2px">Price: $' + firebaseSpot.price + '<b style="color: #fe3300; margin-left: 1px; font-size: 11px"> + Exclusive 10% service fee</b></div>' +
-          '<div style="font-size: 12px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 6px">Details: ' + firebaseSpot.description + '<br></div>' +          
+          '<b style="font-size: 13px">' +
+          firebaseSpot.pintype +
+          "</b>" +
+          "</div>" +
+          '<div style="font-size: 12px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 2px">Price: $' +
+          firebaseSpot.price +
+          '<b style="color: #fe3300; margin-left: 1px; font-size: 11px"> + Exclusive 10% service fee</b></div>' +
+          '<div style="font-size: 12px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 6px">Details: ' +
+          firebaseSpot.description +
+          "<br></div>" +
           // Empty div
           '<div style="font-size: 12px; padding-left: 8px;padding-right: 8px;><br></div>' +
-          '<div style="font-size: 12px; padding-left: 8px;padding-right: 8px;>Location: <b>' + firebaseSpot.dist + 'km away</b><br>The current location of this marker is not the true location of this spot, Purchase it to unlock its true location</div>' +
-          '</div>' +
+          '<div style="font-size: 12px; padding-left: 8px;padding-right: 8px;>Location: <b>' +
+          firebaseSpot.dist +
+          "km away</b><br>The current location of this marker is not the true location of this spot, Purchase it to unlock its true location</div>" +
+          "</div>" +
           '<div onClick="window.ionicPageRef.zone.run(function () { window.ionicPageRef.component.purchaseSpot() })" style="margin-top: 10px; background-color: #ebebeb; padding: 6px; width: 100%; text-align: center">' +
           '<b style="font-size: 12px; color: #fe3300">Purchase Spot</b>' +
-          '</div>' +
-          '</div>';
+          "</div>" +
+          "</div>";
 
         break;
 
-        // Owner
-        case 1:
-          spotdetailsstring = '<div>' +
+      // Owner
+      case 1:
+        spotdetailsstring =
+          "<div>" +
           '<div style="background-color: #ebebeb; padding: 6px; width: 100%; text-align: center">' +
-          '<b style="font-size: 13px">' + firebaseSpot.pintype + '</b>' +
-          '</div>' +
-          '<div style="font-size: 12px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 2px">Price: $' + firebaseSpot.price + '<b style="color: #fe3300; margin-left: 1px; font-size: 11px"> + Exclusive 10% service fee</b></div>' +
-          '<div style="font-size: 12px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 6px">Details: ' + firebaseSpot.description + '<br></div>' +          
+          '<b style="font-size: 13px">' +
+          firebaseSpot.pintype +
+          "</b>" +
+          "</div>" +
+          '<div style="font-size: 12px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 2px">Price: $' +
+          firebaseSpot.price +
+          '<b style="color: #fe3300; margin-left: 1px; font-size: 11px"> + Exclusive 10% service fee</b></div>' +
+          '<div style="font-size: 12px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 6px">Details: ' +
+          firebaseSpot.description +
+          "<br></div>" +
           '<div style="font-size: 12px; padding-left: 8px;padding-right: 8px;><br></div>' +
-          '<div style="font-size: 12px; padding-left: 8px;padding-right: 8px;>Location: <b>' + firebaseSpot.dist + 'km away (' + firebaseSpot.lat.toFixed(4) + ',' + firebaseSpot.lng.toFixed(4) + ')</b><br></div>' +
-          '</div>' +
+          '<div style="font-size: 12px; padding-left: 8px;padding-right: 8px;>Location: <b>' +
+          firebaseSpot.dist +
+          "km away (" +
+          firebaseSpot.lat.toFixed(4) +
+          "," +
+          firebaseSpot.lng.toFixed(4) +
+          ")</b><br></div>" +
+          "</div>" +
           '<div onClick="window.ionicPageRef.zone.run(function () { window.ionicPageRef.component.removeSpot() })" style="margin-top: 10px; background-color: #ebebeb; padding: 6px; width: 100%; text-align: center">' +
           '<b style="font-size: 12px; color: #fe3300">Remove Spot</b>' +
-          '</div>' +
-          '</div>';
+          "</div>" +
+          "</div>";
         break;
 
-
-        // Has bought it
-        case 2:
-            spotdetailsstring = '<div>' +
-            '<div style="background-color: #ebebeb; padding: 6px; width: 100%; text-align: center">' +
-            '<b style="font-size: 13px">' + firebaseSpot.pintype + '</b>' +
-            '</div>' +
-            '<div style="font-size: 12px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 2px">Price: $' + firebaseSpot.price + '<b style="color: #fe3300; margin-left: 1px; font-size: 11px"> + Exclusive 10% service fee</b></div>' +
-            '<div style="font-size: 12px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 6px">Details: ' + firebaseSpot.description + '<br></div>' +
-            '<div style="font-size: 12px; padding-left: 8px;padding-right: 8px;><br></div>' +
-            '<div style="font-size: 12px; padding-left: 8px;padding-right: 8px;>Location: <b>' + firebaseSpot.dist + 'km away (' + firebaseSpot.lat.toFixed(4) + ',' + firebaseSpot.lng.toFixed(4) + ')</b><br></div>' +
-            '</div>' +
-            '<div onClick="window.ionicPageRef.zone.run(function () { window.ionicPageRef.component.viewTrueLocation() })" style="margin-top: 10px; background-color: #ebebeb; padding: 6px; width: 100%; text-align: center">' +
-            '<b style="font-size: 12px; color: #fe3300">Go to true location</b>' +
-            '</div>' +
-            '</div>';
-
+      // Has bought it
+      case 2:
+        spotdetailsstring =
+          "<div>" +
+          '<div style="background-color: #ebebeb; padding: 6px; width: 100%; text-align: center">' +
+          '<b style="font-size: 13px">' +
+          firebaseSpot.pintype +
+          "</b>" +
+          "</div>" +
+          '<div style="font-size: 12px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 2px">Price: $' +
+          firebaseSpot.price +
+          '<b style="color: #fe3300; margin-left: 1px; font-size: 11px"> + Exclusive 10% service fee</b></div>' +
+          '<div style="font-size: 12px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 6px">Details: ' +
+          firebaseSpot.description +
+          "<br></div>" +
+          '<div style="font-size: 12px; padding-left: 8px;padding-right: 8px;><br></div>' +
+          '<div style="font-size: 12px; padding-left: 8px;padding-right: 8px;>Location: <b>' +
+          firebaseSpot.dist +
+          "km away (" +
+          firebaseSpot.lat.toFixed(4) +
+          "," +
+          firebaseSpot.lng.toFixed(4) +
+          ")</b><br></div>" +
+          "</div>" +
+          '<div onClick="window.ionicPageRef.zone.run(function () { window.ionicPageRef.component.viewTrueLocation() })" style="margin-top: 10px; background-color: #ebebeb; padding: 6px; width: 100%; text-align: center">' +
+          '<b style="font-size: 12px; color: #fe3300">Go to true location</b>' +
+          "</div>" +
+          "</div>";
 
         break;
     }
 
     return spotdetailsstring;
-
   }
 
   // Here the owner of a spot can remove it
   removeSpot() {
-    this.storage.get("spotdetails").then((res) => {
-      this.firedata.ref('/allpins').child(res.pinuid).remove(() => {
-        this.presentToast("Spot Removed Successfully");
-        this.ionViewWillEnter();
-      }).catch((err) => {
-        console.log(err);
+    this.ngZone.run(() => {
+      this.storage.get("spotdetails").then(res => {
+        this.loadingCtrl
+          .create({
+            message: "Please wait"
+          })
+          .then(load => {
+            load.present();
+            this.firedata
+              .ref("/allpins")
+              .child(res.pinuid)
+              .remove(() => {
+                this.presentToast("Spot Removed Successfully");
+                load.dismiss();
+                this.ionViewWillEnter();
+              })
+              .catch(err => {
+                load.dismiss();
+                console.log(err);
+              });
+          });
       });
     });
   }
@@ -423,83 +412,107 @@ export class HomePage {
     const toast = await this.toastCtrl.create({
       message: message,
       duration: 2000,
-      position: 'top',
-      color: 'dark'
+      position: "top",
+      color: "dark"
     });
     toast.present();
   }
 
   // Take user to purchase spot page
-  purchaseSpot(){
+  purchaseSpot() {
     if (firebase.auth().currentUser == null) {
-      this.router.navigateByUrl('/login')
+      this.router.navigateByUrl("/login");
     } else {
-        this.router.navigateByUrl('purchasespot')
+      this.router.navigateByUrl("purchasespot");
     }
   }
 
   // View the true location of the spot
-  viewTrueLocation(){
-    let latLng = new google.maps.LatLng(this.truelocationmarker.spot.lat, this.truelocationmarker.spot.lat);
-      this.truelocationmarker.marker.setPosition(latLng)
-      this.map.panTo(latLng)
-      this.map.setZoom(this.defaultzoomevel)
+  viewTrueLocation() {
+    let latLng = new google.maps.LatLng(
+      this.truelocationmarker.spot.lat,
+      this.truelocationmarker.spot.lat
+    );
+    this.truelocationmarker.marker.setPosition(latLng);
+    this.map.panTo(latLng);
+    this.map.setZoom(this.defaultzoomevel);
   }
 
   // Take user to list spot page
-  listSpot(){
+  listSpot() {
     this.getdist();
     var loc1 = new google.maps.LatLng(this.mylocation.lat, this.mylocation.lng);
-    var loc2 = new google.maps.LatLng(this.newmarkerlocation.lat, this.newmarkerlocation.lng);
-    var dist = loc2.distanceFrom(loc1)/1000;
+    var loc2 = new google.maps.LatLng(
+      this.newmarkerlocation.lat,
+      this.newmarkerlocation.lng
+    );
+    var dist = loc2.distanceFrom(loc1) / 1000;
 
     if (firebase.auth().currentUser == null) {
-      this.router.navigateByUrl('/login')
+      this.router.navigateByUrl("/login");
     } else {
-      this.storage.set('listspotdetais', {
-        spotdist: dist,
-        spotlocation: this.newmarkerlocation
-      }).then(() =>{
-        this.router.navigateByUrl('listspot')
-      })
+      this.storage
+        .set("listspotdetais", {
+          spotdist: dist,
+          spotlocation: this.newmarkerlocation
+        })
+        .then(() => {
+          this.router.navigateByUrl("listspot");
+        });
     }
-
   }
 
   // Marker is added when a spot is clicked
   addMarker(map, position) {
-    if (this.globalmarker != undefined ) {
+    if (this.globalmarker != undefined) {
       this.globalmarker.setMap(null);
     }
-    var marker = new google.maps.Marker({
-      position: position,
-      map: map,
-      icon: this.spotclickedicon,
-      draggable: true,
-      animation: google.maps.Animation.BOUNCE
-    });
-    this.globalmarker = marker;
 
-    if(map.getZoom() <= this.defaultzoomevel ){
-      map.setZoom(this.defaultzoomevel);      
+    if(this.globaldetailsinfowindow == undefined){
+      var marker = new google.maps.Marker({
+        position: position,
+        map: map,
+        icon: this.spotclickedicon,
+        draggable: true,
+        animation: google.maps.Animation.BOUNCE
+      });
+      this.globalmarker = marker;
+      if (map.getZoom() <= this.defaultzoomevel) {
+        map.setZoom(this.defaultzoomevel);
+      }
+      map.panTo(marker.getPosition());
     }
-    map.panTo(marker.getPosition());
+    else if(!this.globaldetailsinfowindow.isOpen()){
+      var marker = new google.maps.Marker({
+        position: position,
+        map: map,
+        icon: this.spotclickedicon,
+        draggable: true,
+        animation: google.maps.Animation.BOUNCE
+      });
+      this.globalmarker = marker;
+      if (map.getZoom() <= this.defaultzoomevel) {
+        map.setZoom(this.defaultzoomevel);
+      }
+      map.panTo(marker.getPosition());
+    }
 
-    var contentstring = '<div style="margin-right: 10px"">' +
-    '<div onClick="window.ionicPageRef.zone.run(function () { window.ionicPageRef.component.listSpot() })" style="width: 100%; text-align: center">' +
-    '<div>List Spot</div>' +
-    '</div>' +
-    '</div>';
+    var contentstring =
+      '<div style="margin-right: 10px"">' +
+      '<div onClick="window.ionicPageRef.zone.run(function () { window.ionicPageRef.component.listSpot() })" style="width: 100%; text-align: center">' +
+      "<div>List Spot</div>" +
+      "</div>" +
+      "</div>";
 
     const SnazzyInfoWindow = require("snazzy-info-window");
     var listspotinfoWindow = new SnazzyInfoWindow({
       marker: marker,
       borderRadius: "6px",
       maxWidth: 200,
-      fontSize: '12px',
-      fontColor: '#ffffff',
+      fontSize: "12px",
+      fontColor: "#ffffff",
       maxheight: 150,
-      backgroundColor: '#fe3300',
+      backgroundColor: "#fe3300",
       placement: "top",
       closeOnMapClick: true,
       showCloseButton: false,
@@ -509,22 +522,27 @@ export class HomePage {
         top: "-8px",
         left: "11px"
       },
-      pointer: '3px',
-      padding: '6px',
+      pointer: "3px",
+      padding: "6px",
       content: contentstring
     });
-    listspotinfoWindow.open()
+    listspotinfoWindow.open();
   }
 
   // Goes to your current position when fab is clicked
   gotomypos() {
-    let latLng = new google.maps.LatLng(this.mylocation.lat, this.mylocation.lng);
+    let latLng = new google.maps.LatLng(
+      this.mylocation.lat,
+      this.mylocation.lng
+    );
     this.map.setZoom(this.defaultzoomevel);
     this.map.panTo(latLng);
-    if(this.truelocationmarker != undefined){
-      this.truelocationmarker.marker.setPosition(this.truelocationmarker.initialmarkerpos)
+    if (this.truelocationmarker != undefined) {
+      this.truelocationmarker.marker.setPosition(
+        this.truelocationmarker.initialmarkerpos
+      );
     }
-    if(this.globaldetailsinfowindow != undefined){
+    if (this.globaldetailsinfowindow != undefined) {
       this.globaldetailsinfowindow.close();
       this.globalpriceinfowindow.open();
     }
@@ -551,14 +569,98 @@ export class HomePage {
           this.isPurchasedSelected = !this.isPurchasedSelected;
           break;
       }
+      this.removeAllMarkersExcept(index);
+
     });
   }
 
+  removeAllMarkersExcept(index) {
+    this.ngZone.run(() =>{
+      this.removedmarkers.forEach(removedmarker =>{
+        removedmarker.markertouse.setMap(this.map); 
+        removedmarker.pricewindow.open();
+      })
+      this.removedmarkers = [];
+  
+      switch (index) {
+        // case 1: 
+        //   break;
+  
+        case 2:
+          if(this.isListedSelected){
+            this.markerslist.forEach(markerandspot => {
+              if(markerandspot.spot.pinowner != firebase.auth().currentUser.uid){
+                markerandspot.markertouse.setMap(null);
+                markerandspot.pricewindow.close();
+                markerandspot.detailswindow.close();
+                this.removedmarkers.push(markerandspot)
+              }
+            });
+          }else{
+            this.removedmarkers.forEach(removedmarker =>{
+              // removedmarker.pricewindow.open();
+              removedmarker.markertouse.setMap(this.map)
+            })
+          }
+          break;
+  
+        case 3:
+          if(this.isSoldSelected){
+              this.markerslist.forEach(markerandspot => {
+                if(markerandspot.spot.pinowner == firebase.auth().currentUser.uid
+                && markerandspot.spot.buyers != "a"){
+                }else{
+                  markerandspot.markertouse.setMap(null);
+                  markerandspot.pricewindow.close();
+                  markerandspot.detailswindow.close();
+                  this.removedmarkers.push(markerandspot)
+                }
+              });
+            }else{
+              this.removedmarkers.forEach(removedmarker =>{
+                removedmarker.markertouse.setMap(this.map)
+              })
+            }
+          break;
+  
+        case 4:
+            if(this.isPurchasedSelected){
+              this.markerslist.forEach(markerandspot => {
+                if(!JSON.stringify(markerandspot.spot.buyers).
+                includes(firebase.auth().currentUser.uid)){
+                  markerandspot.markertouse.setMap(null);
+                  markerandspot.pricewindow.close();
+                  markerandspot.detailswindow.close();
+                  this.removedmarkers.push(markerandspot)
+                }
+              });
+            }else{
+              this.removedmarkers.forEach(removedmarker =>{
+                removedmarker.markertouse.setMap(this.map)
+              })
+            }
+          break;
+  
+        case 2:
+  
+          break;
+  
+        case 2:
+  
+          break;
+  
+        case 2:
+  
+          break;
+      }
+    })
+  }
+
   // Spot icons are switched here depending on their type
-  switchSpotIcons(firebaseSpot){
+  switchSpotIcons(firebaseSpot) {
     var customicon;
     var size = new google.maps.Size(25, 25);
-    customicon = '../../assets/icon/black.png';
+    customicon = "../../assets/icon/black.png";
 
     // switch (firebaseSpot.pintype) {
     //   case "Private Spot":
@@ -624,6 +726,7 @@ export class HomePage {
       return Math.round(d);
     };
   }
+
   // Reset all bottom tabs conditions to false
   reset(index) {
     if (index == 1) {

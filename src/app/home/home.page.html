@@ -1,14 +1,14 @@
-<ion-header>
-  <ion-toolbar class="navclass" color="dark">
+<!-- <ion-header>
+  <ion-toolbar color="dark">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-<!--     
+    
     <ion-searchbar no-padding 
     #topsearch
   placeholder="Search by address or zip code"
   [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()"
-     *ngIf="isOn"></ion-searchbar> -->
+     *ngIf="isOn"></ion-searchbar>
 
      
     <ion-title  *ngIf="!isOn">
@@ -27,79 +27,83 @@
         <ion-icon style="font-size: 24px; margin-right: 2px; color: white" name="close"></ion-icon>
     </ion-buttons>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
+
+<div class="mynavbar">
+  <ion-row style="height: 45px; padding: 0px">
+    <ion-col size="1.5">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-col>
+
+    <ion-col
+      style="width: 100%; padding: 0px; height: 100%; text-align: center; vertical-align: middle; line-height: 45px"
+      size="9">
+
+      <!-- Title and logo -->
+      <div *ngIf="!isOn" style="color: white; font-size: 18px">
+        <img style="padding-top: 10px" height="26" src="../../assets/icon/logom1.png">
+        SPOTSWOPPER
+      </div>
+
+      <div class="test" *ngIf="isOn">
+          <ion-searchbar no-padding 
+          #topsearch
+        placeholder="Search by address/zip"
+        [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()"
+           ></ion-searchbar>
+      </div>
+    </ion-col>
+    <ion-col (click)="toggleSearchbar()"
+      style="width: 100%; height: 100%; text-align: end; vertical-align: middle; line-height: 45px;" size="1.5">
+      <ion-icon *ngIf="!isOn" style="font-size: 24px; margin-right: 2px; color: white" name="search"></ion-icon>
+      <ion-icon *ngIf="isOn" style="font-size: 24px; margin-right: 2px; color: white" name="close"></ion-icon>
+    </ion-col>
+  </ion-row>
+</div>
 
 <ion-content #content class="contentdiv">
 
   <!-- Floating button to zoom to user's current location -->
-    <ion-fab style="margin-bottom: 60px;" (click)="gotomypos()" vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button>
-          <ion-icon name="md-locate" color="white"></ion-icon>
-        </ion-fab-button>
-      </ion-fab>
+  <ion-fab style="margin-bottom: 60px;" (click)="gotomypos()" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="md-locate" color="white"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
-      <div>
-          <!-- The map -->
-      <div #mymap id="map">
-      </div>
+  <div>
+    <!-- The map -->
+    <div #mymap id="map">
+    </div>
 
-      <!-- The bottom tabs -->
-        <ion-tabs>
-            <ion-tab-bar slot="bottom" color="dark" class="mytab" id="mytabb">
-              <ion-tab-button (click)="changecolorandsize(1)">
-                  <ion-icon [color]="isFilterSelected ? selected : unselected" src="assets/icon/filter.svg"></ion-icon>
-                  <ion-label style="font-size: 10px" [color]="isFilterSelected ? selected : unselected">Filter Spots</ion-label>
-            </ion-tab-button>
+    <!-- The bottom tabs -->
+    <ion-tabs>
+      <ion-tab-bar color="dark" class="mytab" id="mytabb">
+        <ion-tab-button (click)="changecolorandsize(1)">
+          <ion-icon [color]="isFilterSelected ? selected : unselected" src="assets/icon/filter.svg"></ion-icon>
+          <ion-label style="font-size: 10px" [color]="isFilterSelected ? selected : unselected">Filter Spots</ion-label>
+        </ion-tab-button>
 
-              <ion-tab-button (click)="changecolorandsize(2)">
-                <ion-icon [color]="isListedSelected ? selected : unselected" src="assets/icon/list.svg"></ion-icon>
-                <ion-label style="font-size: 10px" [color]="isListedSelected ? selected : unselected">Spots Listed</ion-label>
-                <ion-badge>6</ion-badge>
-              </ion-tab-button>
-          
-              <ion-tab-button (click)="changecolorandsize(3)">
-                <ion-icon [color]="isSoldSelected ? selected : unselected" color="light" src="assets/icon/sold.svg"></ion-icon>
-                <ion-label style="font-size: 10px" [color]="isSoldSelected ? selected : unselected">Spots Sold</ion-label>
-              </ion-tab-button>
-          
-              <ion-tab-button (click)="changecolorandsize(4)">
-                <ion-icon [color]="isPurchasedSelected ? selected : unselected" color="light" src="assets/icon/cart.svg"></ion-icon>
-                <ion-label style="font-size: 10px" [color]="isPurchasedSelected ? selected : unselected">Spots Purchased</ion-label>
-              </ion-tab-button>
-    
-            </ion-tab-bar>
-          </ion-tabs>
-  
-      </div>
+        <ion-tab-button (click)="changecolorandsize(2)">
+          <ion-icon [color]="isListedSelected ? selected : unselected" src="assets/icon/list.svg"></ion-icon>
+          <ion-label style="font-size: 10px" [color]="isListedSelected ? selected : unselected">Spots Listed</ion-label>
+          <!-- <ion-badge>6</ion-badge> -->
+        </ion-tab-button>
 
+        <ion-tab-button (click)="changecolorandsize(3)">
+          <ion-icon [color]="isSoldSelected ? selected : unselected" color="light" src="assets/icon/sold.svg">
+          </ion-icon>
+          <ion-label style="font-size: 10px" [color]="isSoldSelected ? selected : unselected">Spots Sold</ion-label>
+        </ion-tab-button>
 
- 
+        <ion-tab-button (click)="changecolorandsize(4)">
+          <ion-icon [color]="isPurchasedSelected ? selected : unselected" color="light" src="assets/icon/cart.svg">
+          </ion-icon>
+          <ion-label style="font-size: 10px" [color]="isPurchasedSelected ? selected : unselected">Spots Purchased
+          </ion-label>
+        </ion-tab-button>
 
+      </ion-tab-bar>
+    </ion-tabs>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  </div>
 </ion-content>
-
-
-<!-- <ion-footer> -->
-
-<!-- </ion-footer> -->
