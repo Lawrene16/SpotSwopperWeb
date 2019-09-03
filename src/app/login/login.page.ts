@@ -14,8 +14,8 @@ import { AuthService } from '../auth.service';
 })
 export class LoginPage implements OnInit {
 
-  email = "a@gmail.com";
-  password = "aaaaaaaa";
+  email = "";
+  password = "";
   firedata = firebase.database();
   myrefnumber;
   myreflink = "";
@@ -74,7 +74,7 @@ export class LoginPage implements OnInit {
       }).then((load) =>{
           load.present();
           this.checkIfUserExits(res.uid).then((isthereuser) => {
-            this.presentToast(isthereuser)
+            // this.presentToast(isthereuser)
             switch (isthereuser) {
               case true:
                 this.loadUserDetails(load);

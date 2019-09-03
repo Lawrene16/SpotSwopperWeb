@@ -4,3 +4,20 @@
 // styles are for the entire app and not just one component. Additionally, this 
 // file can hold Sass mixins, functions, and placeholder classes to be imported 
 // and used throughout the application.
+
+// .ios.cordova:not(.fullscreen) .bar-header:not(.bar-subheader) {
+//     height: calc(44px + constant(safe-area-inset-top));
+//   }
+  
+  
+//   .ios.cordova:not(.fullscreen) .bar-header:not(.bar-subheader) > * {
+//     margin-top: constant(safe-area-inset-top);
+//   }
+  
+//   div.tab-nav.tabs {
+//     height: calc(49px + constant(safe-area-inset-bottom));
+//   }
+  
+//   ion-content.padding.scroll-content.ionic-scroll.has-header.has-tabs {
+//     top: calc(64px + constant(safe-area-inset-top));
+//   }

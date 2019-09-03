@@ -12,11 +12,6 @@
   width: 100%;
 }
 
-// ion-content{
-//   // height: 55px;
-//   --overflow: hidden;
-// }
-
 #map{
   height: calc(100vh - 96px) !important;
   // height: 80vh;
@@ -48,9 +43,38 @@
   // background-color: blue;
 }
 
-.contentdiv{
+.selectbtn{
+  height: 35px;
+  background-color:rgb(235, 235, 235);
+  color: #fe3300;
+  position: sticky;
+  padding-top: 7px;
+  bottom: 0px;
+  border-radius: 0px 0px 12px 12px ;
+  text-align: center;
+  width: 100%;
+
+}
+
+.filterdiv{
+  height: 350px;
+  width: 90vw;
+  margin-left: 5vw;
+  opacity: 0.8;
+  overflow-y: scroll;
+  border-radius: 12px;
+  position: absolute;
+  z-index: 15;
+  background-color: white;
+  bottom: 30vh;
+  animation-duration: 0.4s;
+  // animation-delay: 4s;
+}
+ 
+ion-content {
+  --overflow: hidden;
   background-color: transparent;
-  overflow: hidden;
+  width: 100%;
 }
 
 ion-tab-bar{
@@ -68,6 +92,7 @@ ion-tab-bar{
 }
 
 .contentdiv .scroll-content{
+  width: 100%;
   overflow: hidden;
 }
 

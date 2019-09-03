@@ -41,19 +41,20 @@ export class HomePage {
   globaldetailsinfowindow;
   globalpriceinfowindow;
   firebaseArray: any = [];
-  searchedplaces = [];
-  markerslist: any = [];
-
-  // Other Variables
-  defaultzoomevel = 16;
   autocomplete: any;
   GoogleAutocomplete;
   geocoder;
   autocompleteItems = [];
-  defaultloadradius = 25;
-  mindefmarkerrandomgap = 10;
+  searchedplaces = [];
   mylocation;
   newmarkerlocation;
+  markerslist: any = [];
+  filteredspottype;
+
+  // Other Variables
+  defaultzoomevel = 18;
+  defaultloadradius = 3;
+  mindefmarkerrandomgap = 7;
   firedata = firebase.database();
   unselected = "light";
   selected = "primary";
@@ -121,6 +122,8 @@ export class HomePage {
 
   // Map init happens here
   loadMap(location) {
+    // The map is initialized here
+    this.markerslist = [];
     let latLng = new google.maps.LatLng(location.latitude, location.longitude);
     let mapOptions = {
       disableDefaultUI: true,
@@ -131,12 +134,15 @@ export class HomePage {
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
     var originalMarker = new google.maps.Marker({
       position: latLng,
-      map: this.map
+      map: this.map,
+      animation: google.maps.Animation.BOUNCE
+
     });
     google.maps.event.addListenerOnce(this.map, "idle", () => {
       this.drawMarkersInCircle(originalMarker);
     });
 
+    // This listens for when there is a click event on the map
     this.map.addListener("click", e => {
       this.addMarker(this.map, e.latLng);
       this.newmarkerlocation = {
@@ -172,19 +178,22 @@ export class HomePage {
               );
               var dist = loc2.distanceFrom(loc1);
               // distance check condition
-              // if (dist / 1000 < 3) {
 
-              // this.switchSpotIcons(firebaseSpot);
-              var point = this.createRandomPointInCircle(centerPoint, radius);
-              var pos = proj.fromPointToLatLng(point);
-              this.initPriceInfowindow(pos, firebaseSpot);
+              console.log(dist/100000)
+              // if (dist / 100000 < 10) {
+                // if(dist/1000 < 3){
+                                // this.switchSpotIcons(firebaseSpot);
+                  var point = this.createRandomPointInCircle(centerPoint, radius);
+                  var pos = proj.fromPointToLatLng(point);
+                  this.initPriceInfowindow(pos, firebaseSpot);
+
 
               // this.loadSpotsForBottom();
               var uniquemarkerslist = this.markerslist.filter((item, pos) => {
                 return this.markerslist.indexOf(item) == pos;
               })
               this.markerslist = uniquemarkerslist;
-
+                // } 
             });
           })
           .catch(err => {
@@ -318,10 +327,10 @@ export class HomePage {
           '<div style="font-size: 12px; padding-left: 8px;padding-right: 8px;><br></div>' +
           '<div style="font-size: 12px; padding-left: 8px;padding-right: 8px;>Location: <b>' +
           firebaseSpot.dist +
-          "km away</b><br>The current location of this marker is not the true location of this spot, Purchase it to unlock its true location</div>" +
+          "miles away</b><br>The current location of this marker is not the true location of this spot, Purchase it to unlock its true location</div>" +
           "</div>" +
           '<div onClick="window.ionicPageRef.zone.run(function () { window.ionicPageRef.component.purchaseSpot() })" style="margin-top: 10px; background-color: #ebebeb; padding: 6px; width: 100%; text-align: center">' +
-          '<b style="font-size: 12px; color: #fe3300">Purchase Spot</b>' +
+          '<b style="font-size: 12px; color: #fe3300">Purchase to unlock true location</b>' +
           "</div>" +
           "</div>";
 
@@ -345,7 +354,7 @@ export class HomePage {
           '<div style="font-size: 12px; padding-left: 8px;padding-right: 8px;><br></div>' +
           '<div style="font-size: 12px; padding-left: 8px;padding-right: 8px;>Location: <b>' +
           firebaseSpot.dist +
-          "km away (" +
+          "miles away(" +
           firebaseSpot.lat.toFixed(4) +
           "," +
           firebaseSpot.lng.toFixed(4) +
@@ -375,7 +384,7 @@ export class HomePage {
           '<div style="font-size: 12px; padding-left: 8px;padding-right: 8px;><br></div>' +
           '<div style="font-size: 12px; padding-left: 8px;padding-right: 8px;>Location: <b>' +
           firebaseSpot.dist +
-          "km away (" +
+          "miles away(" +
           firebaseSpot.lat.toFixed(4) +
           "," +
           firebaseSpot.lng.toFixed(4) +
@@ -430,13 +439,21 @@ export class HomePage {
     toast.present();
   }
 
+  // Apply filters for filterspots
+  applyFilters(){
+   console.log(this.filteredspottype)
+  }
+
+
   // Take user to purchase spot page
   purchaseSpot() {
-    if (firebase.auth().currentUser == null) {
-      this.router.navigateByUrl("/login");
-    } else {
-      this.router.navigateByUrl("purchasespot");
-    }
+    this.ngZone.run(() =>{
+      if (firebase.auth().currentUser == null) {
+        this.router.navigateByUrl("/login");
+      } else {
+        this.router.navigateByUrl("purchasespot");
+      }
+    })
   }
 
   // View the true location of the spot
@@ -478,6 +495,7 @@ export class HomePage {
         this.searchpinmarker = new google.maps.Marker({
           position: results[0].geometry.location,
           map: this.map,
+          animation: google.maps.Animation.BOUNCE
         });
         this.map.setCenter(results[0].geometry.location);
 
@@ -491,7 +509,8 @@ export class HomePage {
 
   // Take user to list spot page
   listSpot() {
-    this.getdist();
+    this.ngZone.run(() =>{
+      this.getdist();
     var loc1 = new google.maps.LatLng(this.mylocation.lat, this.mylocation.lng);
     var loc2 = new google.maps.LatLng(
       this.newmarkerlocation.lat,
@@ -511,6 +530,7 @@ export class HomePage {
           this.router.navigateByUrl("listspot");
         });
     }
+    })
   }
 
   // Marker is added when a spot is clicked
@@ -528,9 +548,9 @@ export class HomePage {
         animation: google.maps.Animation.BOUNCE
       });
       this.globalmarker = marker;
-      if (map.getZoom() <= this.defaultzoomevel) {
-        map.setZoom(this.defaultzoomevel);
-      }
+      // if (map.getZoom() <= this.defaultzoomevel) {
+      //   map.setZoom(this.defaultzoomevel);
+      // }
       map.panTo(marker.getPosition());
     }
     else if(!this.globaldetailsinfowindow.isOpen()){
@@ -608,6 +628,7 @@ export class HomePage {
       this.reset(index);
       switch (index) {
         case 1:
+
           this.isFilterSelected = !this.isFilterSelected;
           break;
 
@@ -637,8 +658,12 @@ export class HomePage {
       this.removedmarkers = [];
   
       switch (index) {
-        // case 1: 
-        //   break;
+        case 1: 
+          if(this.isFilterSelected){
+
+          }
+
+          break;
   
         case 2:
           if(this.isListedSelected){

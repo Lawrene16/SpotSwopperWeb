@@ -1,84 +1,124 @@
-<!-- <ion-header>
-  <ion-toolbar color="dark">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    
-    <ion-searchbar no-padding 
-    #topsearch
-  placeholder="Search by address or zip code"
-  [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()"
-     *ngIf="isOn"></ion-searchbar>
 
-     
-    <ion-title  *ngIf="!isOn">
-      <div class="titlediv">
-        <img style="float: left;" height="25" src="../../assets/icon/logom1.png">
-        <div style="margin-left: 5px; float: left;">SPOTSWOPPER</div>
+<ion-header>
+  <!-- <ion-toolbar color="dark"> -->
+      <div class="mynavbar">
+          <!-- Floating search list -->
+          <ion-list class="floatinglist" [hidden]="autocompleteItems.length == 0">
+              <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+                {{ item.description }}
+              </ion-item>
+            </ion-list>
+      
+        <ion-row style="height: 45px; padding: 0px">
+          <ion-col size="1.5">
+            <ion-menu-button color="light"></ion-menu-button>
+          </ion-col>
+      
+          <ion-col
+            style="width: 100%; padding: 0px; height: 100%; text-align: center; vertical-align: middle; line-height: 45px"
+            size="9">
+      
+            <!-- Title and logo -->
+            <div *ngIf="!isOn" style="color: white; font-size: 18px">
+              <img style="padding-top: 10px" height="26" src="../../assets/icon/logom1.png">
+              SPOTSWOPPER
+            </div>
+      
+            <!-- Searchbar -->
+            <div class="test" *ngIf="isOn">
+              <!-- <ion-input style="color: white; height: 35px;" no-padding placeholder="Search by Address/Zip">
+      
+              </ion-input> -->
+              <ion-searchbar style="height: 35px;" no-padding #topsearch placeholder="Search by Address/Zip"
+                [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()"></ion-searchbar>
+            </div>
+          </ion-col>
+      
+          <!-- Search and close button -->
+          <ion-col (click)="toggleSearchbar()"
+            style="width: 100%; height: 100%; text-align: end; vertical-align: middle; line-height: 45px;" size="1.5">
+            <ion-icon *ngIf="!isOn" style="font-size: 24px; margin-right: 2px; color: white" name="search"></ion-icon>
+            <ion-icon *ngIf="isOn" style="font-size: 24px; margin-right: 2px; color: white" name="close"></ion-icon>
+          </ion-col>
+        </ion-row>
       </div>
-    </ion-title>
-    
+  <!-- </ion-toolbar> -->
+      
 
-    <ion-buttons slot="end" *ngIf="!isOn" (click)="toggleSearchbar()">
-        <ion-icon style="font-size: 24px; margin-right: 2px; color: white" name="search"></ion-icon>
-    </ion-buttons>
-
-    <ion-buttons slot="end" *ngIf="isOn" (click)="toggleSearchbar()">
-        <ion-icon style="font-size: 24px; margin-right: 2px; color: white" name="close"></ion-icon>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header> -->
-
-<div class="mynavbar">
-    <!-- Floating search list -->
-    <ion-list class="floatinglist" [hidden]="autocompleteItems.length == 0">
-        <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
-          {{ item.description }}
-        </ion-item>
-      </ion-list>
-
-  <ion-row style="height: 45px; padding: 0px">
-    <ion-col size="1.5">
-      <ion-menu-button color="light"></ion-menu-button>
-    </ion-col>
-
-    <ion-col
-      style="width: 100%; padding: 0px; height: 100%; text-align: center; vertical-align: middle; line-height: 45px"
-      size="9">
-
-      <!-- Title and logo -->
-      <div *ngIf="!isOn" style="color: white; font-size: 18px">
-        <img style="padding-top: 10px" height="26" src="../../assets/icon/logom1.png">
-        SPOTSWOPPER
-      </div>
-
-      <!-- Searchbar -->
-      <div class="test" *ngIf="isOn">
-        <!-- <ion-input style="color: white; height: 35px;" no-padding placeholder="Search by Address/Zip">
-
-        </ion-input> -->
-        <ion-searchbar style="height: 35px;" no-padding #topsearch placeholder="Search by Address/Zip"
-          [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()"></ion-searchbar>
-      </div>
-    </ion-col>
-
-    <!-- Search and close button -->
-    <ion-col (click)="toggleSearchbar()"
-      style="width: 100%; height: 100%; text-align: end; vertical-align: middle; line-height: 45px;" size="1.5">
-      <ion-icon *ngIf="!isOn" style="font-size: 24px; margin-right: 2px; color: white" name="search"></ion-icon>
-      <ion-icon *ngIf="isOn" style="font-size: 24px; margin-right: 2px; color: white" name="close"></ion-icon>
-    </ion-col>
-  </ion-row>
-</div>
+</ion-header>
 
 <ion-content #content class="contentdiv">
 
+  <div *ngIf="isFilterSelected" class="filterdiv animated fadeInUp">
+    <div style="width: 100%; text-align: center; margin-top: 10px; padding-left: 20px">Filter Spots
+    <ion-icon (click)="changecolorandsize(1)" name="close" style="float: right; padding-left: 20px; margin-right: 10px"></ion-icon>
+    </div>
+
+    <ion-list>
+        <ion-radio-group [(ngModel)]="filteredspottype">
+          <ion-item>
+            <ion-label>Hunting Spot</ion-label>
+            <ion-radio value="hunting"></ion-radio>
+          </ion-item>
+      
+          <ion-item>
+            <ion-label>Fishing Spot</ion-label>
+            <ion-radio value="fishing"></ion-radio>
+          </ion-item>
+      
+          <ion-item>
+            <ion-label>Lease Spot</ion-label>
+            <ion-radio value="lease"></ion-radio>
+          </ion-item>
+      
+          <ion-item>
+            <ion-label>Spot for Sale</ion-label>
+            <ion-radio value="sale"></ion-radio>
+          </ion-item>
+      
+          <ion-item>
+            <ion-label>Private Spot</ion-label>
+            <ion-radio value="private"></ion-radio>
+          </ion-item>
+
+          <ion-item>
+              <ion-label>Deer Spot</ion-label>
+              <ion-radio value="Deer"></ion-radio>
+            </ion-item>
+        
+            <ion-item>
+              <ion-label>Mushroom Spot</ion-label>
+              <ion-radio value="mushroom"></ion-radio>
+            </ion-item>
+        
+            <ion-item>
+              <ion-label>Bla bla bla</ion-label>
+              <ion-radio value="packard"></ion-radio>
+            </ion-item>
+        
+            <ion-item>
+              <ion-label>Bla bla bla</ion-label>
+              <ion-radio value="studebaker"></ion-radio>
+            </ion-item>
+            <br>
+        </ion-radio-group>
+
+      </ion-list>
+      
+      <div (click)="applyFilters()" class="selectbtn">
+          Apply Filters
+        </div>
+  </div>
+
   <!-- Floating button to zoom to user's current location -->
-  <ion-fab style="margin-bottom: 60px;" (click)="gotomypos()" vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab style="margin-bottom: 12vh;" (click)="gotomypos()" vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button>
       <ion-icon name="md-locate" color="white"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
+
+
 
   <div>
     <!-- The map -->
@@ -116,4 +156,6 @@
     </ion-tabs>
 
   </div>
+
+
 </ion-content>
