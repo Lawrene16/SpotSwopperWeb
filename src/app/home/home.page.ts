@@ -441,9 +441,31 @@ export class HomePage {
 
   // Apply filters for filterspots
   applyFilters(){
-   console.log(this.filteredspottype)
+    this.markerslist.forEach(spottofilter =>{
+      switch(spottofilter.spot.pintype){
+        case "Hunting Spot":
+          break;
+  
+          case "fishing":
+          break;
+  
+          case "lease":
+          break;
+  
+          case "sale":
+          break;
+  
+          case "private":
+          break;
+  
+          case "deer":
+          break;
+  
+          case "mushroom":
+          break; 
+      }
+    })
   }
-
 
   // Take user to purchase spot page
   purchaseSpot() {
@@ -456,6 +478,7 @@ export class HomePage {
     })
   }
 
+
   // View the true location of the spot
   viewTrueLocation() {
     let latLng = new google.maps.LatLng(
@@ -466,6 +489,7 @@ export class HomePage {
     this.map.panTo(latLng);
     this.map.setZoom(this.defaultzoomevel);
   }
+
 
   // Update search results
   updateSearchResults() {
@@ -658,12 +682,12 @@ export class HomePage {
       this.removedmarkers = [];
   
       switch (index) {
-        case 1: 
-          if(this.isFilterSelected){
+        // case 1: 
+        //   if(this.isFilterSelected){
 
-          }
+        //   }
 
-          break;
+        //   break;
   
         case 2:
           if(this.isListedSelected){
