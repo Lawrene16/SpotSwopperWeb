@@ -59,6 +59,7 @@ export class LoginPage implements OnInit {
   }
 
   loadUserDetails(res:any) {
+    this.storage.set('appjustlaunching', 'true');
     this.firedata.ref('/users').child(firebase.auth().currentUser.uid).once('value', snapshot => {
       this.storage.set('userdetails', snapshot.val()).then(() => {
         res.dismiss();
@@ -126,8 +127,8 @@ export class LoginPage implements OnInit {
 
 
   storeUserStuff(name, email, photo, load) {
-
-    console.log(firebase.auth().currentUser.uid)
+    this.storage.set('appjustlaunching', 'true');
+    // console.log(firebase.auth().currentUser.uid)
     this.firedata.ref('/users').child(firebase.auth().currentUser.uid).set({
       name: name,
       balance: 15,

@@ -57,7 +57,7 @@ export class ListspotPage implements OnInit {
                       maxbuyers: this.maxbuyers,
                       description: this.description,
                       lat: this.spotlocation.lat,
-                      lng: this.spotlocation.lat,
+                      lng: this.spotlocation.lng,
                       pintype: this.spottype
         }).then(() =>{                    
           this.firedata.ref('/users').child(firebase.auth().currentUser.uid).child('listed').child(this.pinuid).set({          

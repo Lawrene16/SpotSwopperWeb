@@ -4,6 +4,9 @@ import { Geolocation } from "@ionic-native/geolocation/ngx";
 import { LoadingController, ToastController } from "@ionic/angular";
 import * as firebase from "firebase";
 import { Router } from "@angular/router";
+import undefined = require('firebase/empty-import');
+// import undefined = require('firebase/empty-import');
+// import undefined = require('firebase/empty-import');
 
 declare var require: any;
 
@@ -19,6 +22,7 @@ export class HomePage {
   @ViewChild("mymap", { static: false }) mapElement: ElementRef;
 
   // Boolean variables
+  private isInASearchedLocation: boolean = false;
   private isOn: boolean = false;
   private isFilterSelected: boolean = false;
   private isListedSelected: boolean = false;
@@ -34,6 +38,7 @@ export class HomePage {
   };
   map: any;
   globalmarker;
+  defaultposmarker;
   truelocationmarker;
   searchpinmarker;
   markerposbeforetrueclick;
@@ -59,7 +64,6 @@ export class HomePage {
   unselected = "light";
   selected = "primary";
 
-
   constructor(
     private storage: Storage,
     private ngZone: NgZone,
@@ -71,17 +75,17 @@ export class HomePage {
     Window["myComponent"] = this;
     (<any>window).ionicPageRef = { zone: this.ngZone, component: this };
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
-    this.autocomplete = { input: '' };
+    this.autocomplete = { input: "" };
     this.autocompleteItems = [];
-    this.geocoder = new google.maps.Geocoder;
+    this.geocoder = new google.maps.Geocoder();
   }
 
   toggleSearchbar() {
-    this.ngZone.run(() =>{
-    this.isOn = !this.isOn;
+    this.ngZone.run(() => {
+      this.isOn = !this.isOn;
       this.autocompleteItems = [];
       this.autocomplete.input = "";
-    })
+    });
   }
 
   ionViewWillEnter() {
@@ -89,11 +93,11 @@ export class HomePage {
       this.geolocation
         .getCurrentPosition()
         .then(resp => {
-          this.loadMap(resp.coords);
           this.mylocation = {
             lat: resp.coords.latitude,
             lng: resp.coords.longitude
           };
+          this.loadMap();
         })
         .catch(err => {
           console.log(err);
@@ -121,25 +125,82 @@ export class HomePage {
   }
 
   // Map init happens here
-  loadMap(location) {
+  loadMap() {
     // The map is initialized here
     this.markerslist = [];
-    let latLng = new google.maps.LatLng(location.latitude, location.longitude);
+    let latLng = new google.maps.LatLng(
+      this.mylocation.lat,
+      this.mylocation.lng
+    );
     let mapOptions = {
       disableDefaultUI: true,
-      center: latLng,
+      // center: latLng,
       zoom: this.defaultzoomevel,
       mapTypeId: google.maps.MapTypeId.HYBRID
     };
     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+
     var originalMarker = new google.maps.Marker({
       position: latLng,
       map: this.map,
       animation: google.maps.Animation.BOUNCE
-
     });
+    var searchedMarker = new google.maps.Marker({
+      map: this.map,
+      animation: google.maps.Animation.BOUNCE
+    });
+    // originalMarker.setMap(null)
+    // Storing the marker in a global variable
+    this.defaultposmarker = originalMarker;
+
     google.maps.event.addListenerOnce(this.map, "idle", () => {
-      this.drawMarkersInCircle(originalMarker);
+      this.storage.get('appjustlaunching').then(appjustlaunching =>{
+        // console.log(appjustlaunching)
+
+        if(appjustlaunching == "true"){
+          this.map.setCenter(latLng);
+          // console.log(appjustlaunching)
+          this.drawMarkersInCircle(originalMarker);
+
+          // originalMarker.setPosition(new google.maps.LatLng(
+          //   this.mylocation.lat,
+          //   this.mylocation.lng
+          // ))
+        }else{
+          
+          this.storage.get('markertodrawcirclesaround').then(markertodrawcirclesaround =>{
+            searchedMarker.setPosition(
+              new google.maps.LatLng(
+                markertodrawcirclesaround.lat,
+                markertodrawcirclesaround.lng
+            ));
+            this.map.setCenter(
+              new google.maps.LatLng(
+                markertodrawcirclesaround.lat,
+                markertodrawcirclesaround.lng
+            ));
+            this.drawMarkersInCircle(searchedMarker)
+
+
+          })
+
+        }
+        // this.drawMarkersInCircle(originalMarker);
+
+      });
+
+      // this.storage.get('markertodrawcirclesaround').then(markertodrawcirclesaround =>{
+      //   this.storage.get('aspotwasjustlistedinsearchedlocation').then(wasspotistedinsearchedlocation =>{
+      //     // if(wasspotistedinsearchedlocation == "true"){
+      //       // this.drawMarkersInCircle(originalMarker);
+
+      //     // }else if(wasspotistedinsearchedlocation == "false"){
+      //       this.drawMarkersInCircle(markertodrawcirclesaround);
+      //     // }
+      //   });
+      // });
+
+
     });
 
     // This listens for when there is a click event on the map
@@ -155,16 +216,24 @@ export class HomePage {
   // Random markers are drawn around default marker here
   drawMarkersInCircle(defmarker) {
     // Important!!! when a spot is being pinned it should send the src nd size to firebase so we dont have long crap everywhere
-    this.loadingCtrl.create({
-        message: "Fetching spots 20 miles from your current location"
-      }).then(res => {
+    this.loadingCtrl
+      .create({
+        message: "Fetching spots less than 20 miles away"
+      })
+      .then(res => {
         res.present();
         this.getdist();
         var proj = this.map.getProjection();
         var centerPoint = proj.fromLatLngToPoint(defmarker.getPosition());
         var radius = this.defaultloadradius / 10000;
         var loc1 = defmarker.getPosition();
-        this.firedata.ref("/allpins").orderByChild("mjbmmn").once("value", snapshot => {
+
+        // this.storage.set('appjustlaunching', 'false');
+        // console.log(loc1 )
+        this.firedata
+          .ref("/allpins")
+          .orderByChild("mjbmmn")
+          .once("value", snapshot => {
             this.firebaseArray = [];
             let result = snapshot.val();
             for (var key in result) {
@@ -176,24 +245,23 @@ export class HomePage {
                 firebaseSpot.lat,
                 firebaseSpot.lng
               );
+
               var dist = loc2.distanceFrom(loc1);
-              // distance check condition
+              dist = dist / 1000;
 
-              console.log(dist/100000)
-              // if (dist / 100000 < 10) {
-                // if(dist/1000 < 3){
-                                // this.switchSpotIcons(firebaseSpot);
-                  var point = this.createRandomPointInCircle(centerPoint, radius);
-                  var pos = proj.fromPointToLatLng(point);
-                  this.initPriceInfowindow(pos, firebaseSpot);
+              // distance check condition, if spot is 20miles from you
+              if (dist < 0.2) {
+                // this.switchSpotIcons(firebaseSpot);
+                var point = this.createRandomPointInCircle(centerPoint, radius);
+                var pos = proj.fromPointToLatLng(point);
+                this.initPriceInfowindow(pos, firebaseSpot);
 
-
-              // this.loadSpotsForBottom();
-              var uniquemarkerslist = this.markerslist.filter((item, pos) => {
-                return this.markerslist.indexOf(item) == pos;
-              })
-              this.markerslist = uniquemarkerslist;
-                // } 
+                // this.loadSpotsForBottom();
+                var uniquemarkerslist = this.markerslist.filter((item, pos) => {
+                  return this.markerslist.indexOf(item) == pos;
+                });
+                this.markerslist = uniquemarkerslist;
+              }
             });
           })
           .catch(err => {
@@ -297,11 +365,11 @@ export class HomePage {
     });
 
     this.markerslist.push({
-       spot: firebaseSpot,
-        markertouse: marker, 
-        pricewindow: priceinfoWindow, 
-        detailswindow: detailsinfoWindow
-       });
+      spot: firebaseSpot,
+      markertouse: marker,
+      pricewindow: priceinfoWindow,
+      detailswindow: detailsinfoWindow
+    });
   }
 
   // Init details infowindow
@@ -440,44 +508,43 @@ export class HomePage {
   }
 
   // Apply filters for filterspots
-  applyFilters(){
-    this.markerslist.forEach(spottofilter =>{
-      switch(spottofilter.spot.pintype){
+  applyFilters() {
+    this.markerslist.forEach(spottofilter => {
+      switch (spottofilter.spot.pintype) {
         case "Hunting Spot":
           break;
-  
-          case "fishing":
+
+        case "fishing":
           break;
-  
-          case "lease":
+
+        case "lease":
           break;
-  
-          case "sale":
+
+        case "sale":
           break;
-  
-          case "private":
+
+        case "private":
           break;
-  
-          case "deer":
+
+        case "deer":
           break;
-  
-          case "mushroom":
-          break; 
+
+        case "mushroom":
+          break;
       }
-    })
+    });
   }
 
   // Take user to purchase spot page
   purchaseSpot() {
-    this.ngZone.run(() =>{
+    this.ngZone.run(() => {
       if (firebase.auth().currentUser == null) {
         this.router.navigateByUrl("/login");
       } else {
         this.router.navigateByUrl("purchasespot");
       }
-    })
+    });
   }
-
 
   // View the true location of the spot
   viewTrueLocation() {
@@ -490,32 +557,38 @@ export class HomePage {
     this.map.setZoom(this.defaultzoomevel);
   }
 
-
   // Update search results
   updateSearchResults() {
-    if (this.autocomplete.input == '') {
+    if (this.autocomplete.input == "") {
       this.autocompleteItems = [];
       return;
     }
     // console.log("predictions");
 
-    this.GoogleAutocomplete.getPlacePredictions({ input: this.autocomplete.input },
+    this.GoogleAutocomplete.getPlacePredictions(
+      { input: this.autocomplete.input },
       (predictions, status) => {
         this.autocompleteItems = [];
         this.ngZone.run(() => {
-          predictions.forEach((prediction) => {
+          predictions.forEach(prediction => {
             this.autocompleteItems.push(prediction);
           });
         });
-      });
+      }
+    );
   }
 
   // On search result selected
   selectSearchResult(item) {
-    // this.clearMarkers();
     this.autocompleteItems = [];
-    this.geocoder.geocode({ 'placeId': item.place_id }, (results, status) => {
-      if (status === 'OK' && results[0]) {
+    this.isInASearchedLocation = true;
+
+    if (this.searchpinmarker != undefined) {
+      this.searchpinmarker.setMap(null);
+    }
+    this.searchpinmarker;
+    this.geocoder.geocode({ placeId: item.place_id }, (results, status) => {
+      if (status === "OK" && results[0]) {
         this.searchpinmarker = new google.maps.Marker({
           position: results[0].geometry.location,
           map: this.map,
@@ -523,38 +596,67 @@ export class HomePage {
         });
         this.map.setCenter(results[0].geometry.location);
 
-        if(!this.searchedplaces.includes(item.place_id)){
+        if (!this.searchedplaces.includes(item.place_id)) {
           this.drawMarkersInCircle(this.searchpinmarker);
-          this.searchedplaces.push(item.place_id)
+          this.storage.set('appjustlaunching', 'false');
+          this.searchedplaces.push(item.place_id);
         }
       }
-    })
+    });
   }
 
   // Take user to list spot page
   listSpot() {
-    this.ngZone.run(() =>{
+    this.ngZone.run(() => {
       this.getdist();
-    var loc1 = new google.maps.LatLng(this.mylocation.lat, this.mylocation.lng);
-    var loc2 = new google.maps.LatLng(
-      this.newmarkerlocation.lat,
-      this.newmarkerlocation.lng
-    );
-    var dist = loc2.distanceFrom(loc1) / 1000;
+      var loc1 = new google.maps.LatLng(
+        this.mylocation.lat,
+        this.mylocation.lng
+      );
+      var loc2 = new google.maps.LatLng(
+        this.newmarkerlocation.lat,
+        this.newmarkerlocation.lng
+      );
 
-    if (firebase.auth().currentUser == null) {
-      this.router.navigateByUrl("/login");
-    } else {
-      this.storage
-        .set("listspotdetais", {
-          spotdist: dist,
-          spotlocation: this.newmarkerlocation
-        })
-        .then(() => {
-          this.router.navigateByUrl("listspot");
-        });
-    }
-    })
+      // Store searched marker and original marker in variable to be used later
+
+      var originalmarkervar = {
+        lat: this.defaultposmarker.getPosition().lat(),
+        lng: this.defaultposmarker.getPosition().lng()
+      }
+      
+
+      if (this.isInASearchedLocation == true) {
+        if(this.searchpinmarker != undefined){
+          var searchpinmarkervar = {
+            lat: this.searchpinmarker.getPosition().lat(),
+            lng: this.searchpinmarker.getPosition().lng()
+          }
+          this.storage.set('markertodrawcirclesaround', searchpinmarkervar);
+          this.storage.set('appjustlaunching', "false");
+  
+        }
+      }else{
+        this.storage.set('markertodrawcirclesaround', originalmarkervar);
+        this.storage.set('appjustlaunching', "true");
+      }
+      
+
+      var dist = loc2.distanceFrom(loc1) / 1000;
+
+      if (firebase.auth().currentUser == null) {
+        this.router.navigateByUrl("/login");
+      } else {
+        this.storage
+          .set("listspotdetais", {
+            spotdist: dist,
+            spotlocation: this.newmarkerlocation
+          })
+          .then(() => {
+            this.router.navigateByUrl("listspot");
+          });
+      }
+    });
   }
 
   // Marker is added when a spot is clicked
@@ -563,7 +665,7 @@ export class HomePage {
       this.globalmarker.setMap(null);
     }
 
-    if(this.globaldetailsinfowindow == undefined){
+    if (this.globaldetailsinfowindow == undefined) {
       var marker = new google.maps.Marker({
         position: position,
         map: map,
@@ -576,8 +678,7 @@ export class HomePage {
       //   map.setZoom(this.defaultzoomevel);
       // }
       map.panTo(marker.getPosition());
-    }
-    else if(!this.globaldetailsinfowindow.isOpen()){
+    } else if (!this.globaldetailsinfowindow.isOpen()) {
       var marker = new google.maps.Marker({
         position: position,
         map: map,
@@ -626,7 +727,21 @@ export class HomePage {
 
   // Goes to your current position when fab is clicked
   gotomypos() {
+    this.isOn = false;
+    this.isInASearchedLocation = false;
     this.autocompleteItems = [];
+    this.autocomplete.input = "";
+    this.searchpinmarker = undefined;
+    // Store searched marker in variable to be used later
+    if(this.searchpinmarker != undefined){
+      var searchpinmarkervar = {
+        lat: this.searchpinmarker.getPosition().lat(),
+        lng: this.searchpinmarker.getPosition().lng()
+        }
+        this.storage.set('markertodrawcirclesaround', searchpinmarkervar);
+    }
+    this.storage.set('appjustlaunching', "true");
+
 
     let latLng = new google.maps.LatLng(
       this.mylocation.lat,
@@ -643,7 +758,7 @@ export class HomePage {
       this.globaldetailsinfowindow.close();
       this.globalpriceinfowindow.open();
     }
-    console.log(this.searchedplaces)
+    console.log(this.searchedplaces);
   }
 
   // Change icon colors on tab click
@@ -652,7 +767,6 @@ export class HomePage {
       this.reset(index);
       switch (index) {
         case 1:
-
           this.isFilterSelected = !this.isFilterSelected;
           break;
 
@@ -669,94 +783,91 @@ export class HomePage {
           break;
       }
       this.removeAllMarkersExcept(index);
-
     });
   }
 
   removeAllMarkersExcept(index) {
-    this.ngZone.run(() =>{
-      this.removedmarkers.forEach(removedmarker =>{
-        removedmarker.markertouse.setMap(this.map); 
+    this.ngZone.run(() => {
+      this.removedmarkers.forEach(removedmarker => {
+        removedmarker.markertouse.setMap(this.map);
         removedmarker.pricewindow.open();
-      })
+      });
       this.removedmarkers = [];
-  
+
       switch (index) {
-        // case 1: 
-        //   if(this.isFilterSelected){
-
-        //   }
-
-        //   break;
-  
         case 2:
-          if(this.isListedSelected){
+          if (this.isListedSelected) {
             this.markerslist.forEach(markerandspot => {
-              if(markerandspot.spot.pinowner != firebase.auth().currentUser.uid){
+              if (
+                markerandspot.spot.pinowner != firebase.auth().currentUser.uid
+              ) {
                 markerandspot.markertouse.setMap(null);
                 markerandspot.pricewindow.close();
                 markerandspot.detailswindow.close();
-                this.removedmarkers.push(markerandspot)
+                this.removedmarkers.push(markerandspot);
               }
             });
-          }else{
-            this.removedmarkers.forEach(removedmarker =>{
+          } else {
+            this.removedmarkers.forEach(removedmarker => {
               // removedmarker.pricewindow.open();
-              removedmarker.markertouse.setMap(this.map)
-            })
+              removedmarker.markertouse.setMap(this.map);
+            });
           }
           break;
-  
+
         case 3:
-          if(this.isSoldSelected){
-              this.markerslist.forEach(markerandspot => {
-                if(markerandspot.spot.pinowner == firebase.auth().currentUser.uid
-                && markerandspot.spot.buyers != "a"){
-                }else{
-                  markerandspot.markertouse.setMap(null);
-                  markerandspot.pricewindow.close();
-                  markerandspot.detailswindow.close();
-                  this.removedmarkers.push(markerandspot)
-                }
-              });
-            }else{
-              this.removedmarkers.forEach(removedmarker =>{
-                removedmarker.markertouse.setMap(this.map)
-              })
-            }
+          if (this.isSoldSelected) {
+            this.markerslist.forEach(markerandspot => {
+              if (
+                markerandspot.spot.pinowner ==
+                  firebase.auth().currentUser.uid &&
+                markerandspot.spot.buyers != "a"
+              ) {
+              } else {
+                markerandspot.markertouse.setMap(null);
+                markerandspot.pricewindow.close();
+                markerandspot.detailswindow.close();
+                this.removedmarkers.push(markerandspot);
+              }
+            });
+          } else {
+            this.removedmarkers.forEach(removedmarker => {
+              removedmarker.markertouse.setMap(this.map);
+            });
+          }
           break;
-  
+
         case 4:
-            if(this.isPurchasedSelected){
-              this.markerslist.forEach(markerandspot => {
-                if(!JSON.stringify(markerandspot.spot.buyers).
-                includes(firebase.auth().currentUser.uid)){
-                  markerandspot.markertouse.setMap(null);
-                  markerandspot.pricewindow.close();
-                  markerandspot.detailswindow.close();
-                  this.removedmarkers.push(markerandspot)
-                }
-              });
-            }else{
-              this.removedmarkers.forEach(removedmarker =>{
-                removedmarker.markertouse.setMap(this.map)
-              })
-            }
+          if (this.isPurchasedSelected) {
+            this.markerslist.forEach(markerandspot => {
+              if (
+                !JSON.stringify(markerandspot.spot.buyers).includes(
+                  firebase.auth().currentUser.uid
+                )
+              ) {
+                markerandspot.markertouse.setMap(null);
+                markerandspot.pricewindow.close();
+                markerandspot.detailswindow.close();
+                this.removedmarkers.push(markerandspot);
+              }
+            });
+          } else {
+            this.removedmarkers.forEach(removedmarker => {
+              removedmarker.markertouse.setMap(this.map);
+            });
+          }
           break;
-  
+
         case 2:
-  
           break;
-  
+
         case 2:
-  
           break;
-  
+
         case 2:
-  
           break;
       }
-    })
+    });
   }
 
   // Spot icons are switched here depending on their type
