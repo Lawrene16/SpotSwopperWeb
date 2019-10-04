@@ -27,19 +27,27 @@
             <ion-input type="number" [(ngModel)]="maxbuyers" placeholder="Maximum Number of Buyers"></ion-input>
         </ion-item>
       
+        
         <ion-card class="each_item">
           <ion-item lines="none">
             <ion-label style="opacity: 0.7; margin: 10px">Select Type of Spot</ion-label>
+
+             
             <ion-select [(ngModel)]="spottype" ok-text="Okay" cancel-text="Dismiss">
                 <ion-select-option value="Spot for Sale">Spot for Sale</ion-select-option>
                 <ion-select-option value="Lease Spot">Lease Spot</ion-select-option>
                 <ion-select-option value="Hunting Spot">Hunting Spot</ion-select-option>
                 <ion-select-option value="Fishing Spot">Fishing Spot</ion-select-option>
-                <ion-select-option value="Private Spot">Private Spot</ion-select-option>          
+                <ion-select-option value="Private Spot">Private Spot</ion-select-option>
+                <ion-select-option value="Private Spot">Camping Spot</ion-select-option>          
+                <ion-select-option value="Private Spot">Lodge Spot</ion-select-option>          
+                <ion-select-option value="Private Spot">MISC Spot</ion-select-option>          
+
               </ion-select>
           </ion-item>
         </ion-card>
       
+         
         <ion-item lines="none">
           <ion-label style="opacity: 0.8; font-size: 16px">
             By checking this box you agree that <br>
@@ -54,11 +62,12 @@
             </ion-checkbox>
         </ion-item>
       
+         
         <br>
         <br>
       
         <ion-button style="margin-left: 5vw; margin-right: 5vw; margin-top: 10px;" expand="block" color="danger" (click)="listSpot()"><b>LIST SPOT</b></ion-button>
-      
+     
   </div>
 
 </ion-content>

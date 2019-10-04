@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { LoadingController, ToastController, MenuController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import * as firebase from 'firebase';
-
+import { Events } from '@ionic/angular';
 import { AuthService } from '../auth.service';
 
 
@@ -24,6 +24,7 @@ export class LoginPage implements OnInit {
     private storage: Storage,
     private auth: AuthService,
     private menu: MenuController,
+    private events: Events,
     private toastController: ToastController,
     private loadingCtrl: LoadingController) { 
       this.menu.enable(false, 'custom');
@@ -61,6 +62,7 @@ export class LoginPage implements OnInit {
   loadUserDetails(res:any) {
     this.storage.set('appjustlaunching', 'true');
     this.firedata.ref('/users').child(firebase.auth().currentUser.uid).once('value', snapshot => {
+      this.events.publish('userstuff', snapshot.val());
       this.storage.set('userdetails', snapshot.val()).then(() => {
         res.dismiss();
         this.router.navigateByUrl('/home');
@@ -146,6 +148,7 @@ export class LoginPage implements OnInit {
       this.firedata.ref('/users').child(firebase.auth().currentUser.uid).once('value', snapshot => {
         // console.log(snapshot.val());
         this.storage.set('userdetails', snapshot.val()).then(() => {
+          this.events.publish('userstuff', snapshot.val());
 
           this.router.navigateByUrl('/home');
           if (load != null) {

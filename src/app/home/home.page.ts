@@ -4,9 +4,6 @@ import { Geolocation } from "@ionic-native/geolocation/ngx";
 import { LoadingController, ToastController } from "@ionic/angular";
 import * as firebase from "firebase";
 import { Router } from "@angular/router";
-import undefined = require('firebase/empty-import');
-// import undefined = require('firebase/empty-import');
-// import undefined = require('firebase/empty-import');
 
 declare var require: any;
 
@@ -29,6 +26,9 @@ export class HomePage {
   private isSoldSelected: boolean = false;
   private isPurchasedSelected: boolean = false;
 
+
+
+
   // Anonymous variables
   spotclickedicon = {
     url: "../../assets/icon/red.png", // url
@@ -43,6 +43,7 @@ export class HomePage {
   searchpinmarker;
   markerposbeforetrueclick;
   removedmarkers = [];
+
   globaldetailsinfowindow;
   globalpriceinfowindow;
   firebaseArray: any = [];
@@ -155,19 +156,11 @@ export class HomePage {
 
     google.maps.event.addListenerOnce(this.map, "idle", () => {
       this.storage.get('appjustlaunching').then(appjustlaunching =>{
-        // console.log(appjustlaunching)
-
         if(appjustlaunching == "true"){
           this.map.setCenter(latLng);
           // console.log(appjustlaunching)
           this.drawMarkersInCircle(originalMarker);
-
-          // originalMarker.setPosition(new google.maps.LatLng(
-          //   this.mylocation.lat,
-          //   this.mylocation.lng
-          // ))
         }else{
-          
           this.storage.get('markertodrawcirclesaround').then(markertodrawcirclesaround =>{
             searchedMarker.setPosition(
               new google.maps.LatLng(
@@ -180,27 +173,9 @@ export class HomePage {
                 markertodrawcirclesaround.lng
             ));
             this.drawMarkersInCircle(searchedMarker)
-
-
           })
-
         }
-        // this.drawMarkersInCircle(originalMarker);
-
       });
-
-      // this.storage.get('markertodrawcirclesaround').then(markertodrawcirclesaround =>{
-      //   this.storage.get('aspotwasjustlistedinsearchedlocation').then(wasspotistedinsearchedlocation =>{
-      //     // if(wasspotistedinsearchedlocation == "true"){
-      //       // this.drawMarkersInCircle(originalMarker);
-
-      //     // }else if(wasspotistedinsearchedlocation == "false"){
-      //       this.drawMarkersInCircle(markertodrawcirclesaround);
-      //     // }
-      //   });
-      // });
-
-
     });
 
     // This listens for when there is a click event on the map
@@ -509,30 +484,106 @@ export class HomePage {
 
   // Apply filters for filterspots
   applyFilters() {
-    this.markerslist.forEach(spottofilter => {
-      switch (spottofilter.spot.pintype) {
+    this.isFilterSelected = false;
+    this.ngZone.run(() =>{
+      this.removedmarkers.forEach(removedmarker => {
+        removedmarker.markertouse.setMap(this.map);
+        removedmarker.pricewindow.open();
+      });
+      this.removedmarkers = [];
+
+      switch (this.filteredspottype) {
         case "Hunting Spot":
+          this.markerslist.forEach(markerandspot => {
+            if (markerandspot.spot.pintype != "Hunting Spot") {
+              markerandspot.markertouse.setMap(null);
+              markerandspot.pricewindow.close();
+              markerandspot.detailswindow.close();
+              this.removedmarkers.push(markerandspot);
+            }
+          });
           break;
 
-        case "fishing":
+        
+        case "Private Spot":
+            this.markerslist.forEach(markerandspot => {
+              if (markerandspot.spot.pintype != "Private Spot") {
+                markerandspot.markertouse.setMap(null);
+                markerandspot.pricewindow.close();
+                markerandspot.detailswindow.close();
+                this.removedmarkers.push(markerandspot);
+              }
+            });
+            break;
+      
+        case "Fishing Spot":
+            this.markerslist.forEach(markerandspot => {
+              if (markerandspot.spot.pintype != "Fishing Spot") {
+                markerandspot.markertouse.setMap(null);
+                markerandspot.pricewindow.close();
+                markerandspot.detailswindow.close();
+                this.removedmarkers.push(markerandspot);
+              }
+            });
           break;
 
-        case "lease":
+        case "Lease Spot":
+            this.markerslist.forEach(markerandspot => {
+              if (markerandspot.spot.pintype != "Lease Spot") {
+                markerandspot.markertouse.setMap(null);
+                markerandspot.pricewindow.close();
+                markerandspot.detailswindow.close();
+                this.removedmarkers.push(markerandspot);
+              }
+            });
           break;
 
-        case "sale":
+        case "Spot for Sale":
+            this.markerslist.forEach(markerandspot => {
+              if (markerandspot.spot.pintype != "Spot for Sale") {
+                markerandspot.markertouse.setMap(null);
+                markerandspot.pricewindow.close();
+                markerandspot.detailswindow.close();
+                this.removedmarkers.push(markerandspot);
+              }
+            });
           break;
 
-        case "private":
+        case "Camping Spot":
+            this.markerslist.forEach(markerandspot => {
+              if (markerandspot.spot.pintype != "Camping Spot") {
+                markerandspot.markertouse.setMap(null);
+                markerandspot.pricewindow.close();
+                markerandspot.detailswindow.close();
+                this.removedmarkers.push(markerandspot);
+              }
+            });
           break;
 
-        case "deer":
+        case "Lodge Spot":
+            this.markerslist.forEach(markerandspot => {
+              if (markerandspot.spot.pintype != "Lodge Spot") {
+                markerandspot.markertouse.setMap(null);
+                markerandspot.pricewindow.close();
+                markerandspot.detailswindow.close();
+                this.removedmarkers.push(markerandspot);
+              }
+            });
           break;
 
-        case "mushroom":
+        case "MISC categories":
+            this.markerslist.forEach(markerandspot => {
+              if (markerandspot.spot.pintype != "MISC categories") {
+                markerandspot.markertouse.setMap(null);
+                markerandspot.pricewindow.close();
+                markerandspot.detailswindow.close();
+                this.removedmarkers.push(markerandspot);
+              }
+            });
           break;
       }
-    });
+
+    })
   }
 
   // Take user to purchase spot page
@@ -786,6 +837,7 @@ export class HomePage {
     });
   }
 
+  // Remove all the other spots apart from the one that was highlighted
   removeAllMarkersExcept(index) {
     this.ngZone.run(() => {
       this.removedmarkers.forEach(removedmarker => {

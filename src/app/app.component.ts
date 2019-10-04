@@ -8,6 +8,7 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { Router } from '@angular/router';
 // import { Storage } from '@ionic/angular'
 import { Storage } from '@ionic/storage';
+import { Events } from '@ionic/angular';
 
 
 @Component({
@@ -44,6 +45,11 @@ export class AppComponent {
       icon: 'list'
     },
     {
+      title: 'Help',
+      url: '/help',
+      icon: 'help-circle-outline'
+    },
+    {
       title: 'Share',
       url: '/home',
       icon: 'share'
@@ -58,6 +64,7 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
+    private events: Events,
     private statusBar: StatusBar,
     private socialSharing: SocialSharing,
     private router: Router,
@@ -65,17 +72,12 @@ export class AppComponent {
   ) {
     this.initializeApp();
 
-    this.storage.get('userdetails').then((res) => {
-      if(res != null){
-        // console.log(res)
-        this.fullname = res.name;
+    this.events.subscribe('userstuff', (res) =>{
+      // console.log(res)
+          this.fullname = res.name;
         this.refernumber = res.refernumber
         this.useremail = res.email
-      }
-     
-      // if(firebase.auth().curent){
-      // }
-    });
+    })
   }
 
   checkPage(p){
