@@ -1,7 +1,8 @@
 
     .topdiv{
         width: 100%;
-        background-color: #222428;
+        // background-color: #222428;
+        background-image: url('../../assets/icon/background.jpg');
         padding-top: 10px;
         // background-color: #0e0d0d;
         align-content: center;
@@ -9,6 +10,11 @@
         height: 30vh;
     }
 
+    ion-toolbar {
+        --background: url('../../assets/icon/background.jpg');
+        --background-repeat: no-repeat;
+        //  fixed center; 
+     }
 
  
 ion-content {

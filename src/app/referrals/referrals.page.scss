@@ -4,3 +4,10 @@
         align-content: center;
         text-align: center;
     }
+
+
+    ion-toolbar {
+        --background: url('../../assets/icon/background.jpg');
+        --background-repeat: no-repeat;
+        //  fixed center; 
+     }

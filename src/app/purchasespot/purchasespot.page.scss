@@ -25,6 +25,12 @@
   }
 
 
+  ion-toolbar {
+    --background: url('../../assets/icon/background.jpg');
+    --background-repeat: no-repeat;
+    //  fixed center; 
+ }
+
  
 ion-content {
   --overflow: hidden;

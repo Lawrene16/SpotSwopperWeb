@@ -28,7 +28,7 @@
           <!-- <ion-input style="color: white; height: 35px;" no-padding placeholder="Search by Address/Zip">
       
               </ion-input> -->
-          <ion-searchbar style="height: 35px;" no-padding #topsearch placeholder="Search by Address/Zip"
+          <ion-searchbar style="height: 35px; color: #000000" no-padding #topsearch placeholder="Search by Address/Zip"
             [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()"></ion-searchbar>
         </div>
       </ion-col>
@@ -124,7 +124,7 @@
 
     <!-- The bottom tabs -->
     <ion-tabs>
-      <ion-tab-bar color="dark" class="mytab" id="mytabb">
+      <ion-tab-bar class="mytab" id="mytabb">
         <ion-tab-button (click)="changecolorandsize(1)">
           <ion-icon [color]="isFilterSelected ? selected : unselected" src="assets/icon/filter.svg"></ion-icon>
           <ion-label style="font-size: 10px" [color]="isFilterSelected ? selected : unselected">Filter Spots</ion-label>

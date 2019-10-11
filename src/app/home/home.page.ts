@@ -55,7 +55,7 @@ export class HomePage {
   mylocation;
   newmarkerlocation;
   markerslist: any = [];
-  filteredspottype;
+  filteredspottype = "";
 
   // Other Variables
   defaultzoomevel = 18;
@@ -332,6 +332,7 @@ export class HomePage {
           spot: firebaseSpot,
           marker: marker
         };
+
       });
     });
 
@@ -601,9 +602,12 @@ export class HomePage {
   viewTrueLocation() {
     let latLng = new google.maps.LatLng(
       this.truelocationmarker.spot.lat,
-      this.truelocationmarker.spot.lat
+      this.truelocationmarker.spot.lng
     );
+
     this.truelocationmarker.marker.setPosition(latLng);
+
+    
     this.map.panTo(latLng);
     this.map.setZoom(this.defaultzoomevel);
   }

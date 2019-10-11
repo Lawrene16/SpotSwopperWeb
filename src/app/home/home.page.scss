@@ -8,7 +8,8 @@
 
 .mynavbar{
   height: 45px;
-  background-color: #222428;
+  // background-color: #222428;
+  background: url('../../assets/icon/background.jpg');
   width: 100%;
 }
 
@@ -79,6 +80,12 @@ ion-content {
 
 ion-tab-bar{
   height: 55px;
+
+}
+
+ion-tab-button{
+  background: url('../../assets/icon/background.jpg');
+
 }
 
 .test{

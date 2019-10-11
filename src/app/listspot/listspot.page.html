@@ -1,13 +1,23 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar color="dark">
     <ion-buttons style="margin-left: 5px" slot="start">
-      <!-- <ion-icon name="arrow-back"></ion-icon> -->
-      <ion-back-button defaultHref="/home"></ion-back-button>
+      <ion-back-button color="light" defaultHref="/home"></ion-back-button>
     </ion-buttons>
 
-    <ion-title>List Spot</ion-title>
+    <ion-title color="light">List Spot</ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
+
+
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons style="margin-left: 5px" slot="start">
+            <ion-back-button color="light" defaultHref="/home"></ion-back-button>
+          </ion-buttons>
+  
+      <ion-title color="light">List Spot</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
 
 <ion-content >
@@ -39,9 +49,9 @@
                 <ion-select-option value="Hunting Spot">Hunting Spot</ion-select-option>
                 <ion-select-option value="Fishing Spot">Fishing Spot</ion-select-option>
                 <ion-select-option value="Private Spot">Private Spot</ion-select-option>
-                <ion-select-option value="Private Spot">Camping Spot</ion-select-option>          
-                <ion-select-option value="Private Spot">Lodge Spot</ion-select-option>          
-                <ion-select-option value="Private Spot">MISC Spot</ion-select-option>          
+                <ion-select-option value="Camping Spot">Camping Spot</ion-select-option>          
+                <ion-select-option value="Lodge Spot">Lodge Spot</ion-select-option>          
+                <ion-select-option value="MISC Spot">MISC categories</ion-select-option>          
 
               </ion-select>
           </ion-item>
