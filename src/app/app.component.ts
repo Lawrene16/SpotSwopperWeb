@@ -20,6 +20,7 @@ export class AppComponent {
 
   refernumber;
   fullname;
+  balance;
   useremail;
   
 
@@ -75,8 +76,9 @@ export class AppComponent {
     this.events.subscribe('userstuff', (res) =>{
       // console.log(res)
           this.fullname = res.name;
-        this.refernumber = res.refernumber
-        this.useremail = res.email
+        this.refernumber = res.refernumber;
+        this.useremail = res.email;
+        this.balance = res.balance.toFixed(2);
     })
   }
 

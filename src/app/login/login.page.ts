@@ -45,18 +45,26 @@ export class LoginPage implements OnInit {
   }
 
   signin(){
-    this.loadingCtrl.create({
-      message: 'Logging you in',
-    }).then((res) =>{
-      res.present();
+    if(this.email == "" || this.email.length < 3 ||
+    !this.email.includes('@') || !this.email.includes('.')){
+      this.presentToast("Invalid username/email address")
+    }else if(this.password == "" || this.password.length < 6){
+      this.presentToast("Password name field is either blank or too short")      
+    }else{
+      this.loadingCtrl.create({
+        message: 'Logging you in',
+      }).then((res) =>{
+        res.present();
+  
+        firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(() => {
+          this.loadUserDetails(res)
+        }).catch((err) => {
+          res.dismiss()
+          // this.presentToast(err)
+        });;
+      });
+    }
 
-      firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(() => {
-        this.loadUserDetails(res)
-      }).catch((err) => {
-        res.dismiss()
-        // this.presentToast(err)
-      });;
-    });
   }
 
   loadUserDetails(res:any) {

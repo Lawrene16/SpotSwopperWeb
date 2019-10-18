@@ -127,6 +127,19 @@ export class HomePage {
 
   // Map init happens here
   loadMap() {
+
+    var size = new google.maps.Size(45, 45);
+    var customicon = "../../assets/icon/pin.png";
+
+
+    var icon = {
+      url: customicon, // url
+      scaledSize: size, // scaled size
+      origin: new google.maps.Point(0, 0), // origin
+      anchor: new google.maps.Point(0, 0) // anchor
+    };
+
+
     // The map is initialized here
     this.markerslist = [];
     let latLng = new google.maps.LatLng(
@@ -143,6 +156,7 @@ export class HomePage {
 
     var originalMarker = new google.maps.Marker({
       position: latLng,
+      icon: icon,
       map: this.map,
       animation: google.maps.Animation.BOUNCE
     });

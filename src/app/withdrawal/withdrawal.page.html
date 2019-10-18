@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-buttons style="margin-left: 5px" slot="start">
+          <ion-back-button color="light" defaultHref="/home"></ion-back-button>
+        </ion-buttons>
+
+    <ion-title color="light">Withdraw</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-item class="each_item">
+    <ion-icon color="warning" src="../../assets/icon/money.svg" style="margin-right: 10px;"></ion-icon>
+    <ion-input type="number" [(ngModel)]="amount" placeholder="Enter withdrawal amount here"></ion-input>
+  </ion-item>
+
+  <br>
+
+  <ion-item class="each_item">
+    <ion-icon color="warning" src="../../assets/icon/paypal.svg" style="margin-right: 10px;"></ion-icon>
+    <ion-input type="email" [(ngModel)]="email" placeholder="Enter paypal email address"></ion-input>
+  </ion-item>
+
+  <br>
+           
+  <ion-item lines="none">
+    <ion-label style="opacity: 0.8; font-size: 16px">
+      By checking this box you agree that <br>
+       the funds specified above will be  <br>
+       withdrawn from your SpotSwopper <br>
+       balance to the paypal email address <br> above
+        </ion-label>
+      <ion-checkbox (ionChange)="chee($event)">
+      </ion-checkbox>
+  </ion-item>
+  <br>
+
+
+  <ion-button style="margin-left: 5vw; margin-right: 5vw; margin-top: 10px;" expand="block" color="danger" (click)="withdrawFunds()"><b>Withdraw funds</b></ion-button>
+
+</ion-content>

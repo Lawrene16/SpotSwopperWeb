@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import * as firebase from 'firebase';
 import { Storage } from '@ionic/storage';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -26,7 +27,9 @@ export class MyaccountPage implements OnInit {
   myrefid;
 
 
-  constructor(public storage: Storage,) { }
+  constructor(public storage: Storage,
+    public router: Router
+    ) { }
 
   ngOnInit() {
   }
@@ -37,29 +40,45 @@ export class MyaccountPage implements OnInit {
   
 
   ionViewWillEnter() {
-    // console.log('Ion view hs entered again');
-    if (this.testint == 0) {
-      // console.log("dfdfdfdf")
-      this.storage.get('userdetails').then((res) => {
-        console.log(res);
-        this.fullname = res.name;
+    this.firedata.ref('/users').child(firebase.auth().currentUser.uid).once('value', snapshot => {
+      var res = snapshot.val();
+      this.fullname = res.name;
         this.balance = res.balance.toFixed(2);
         this.email = res.email;
         this.myrefid = "SpotSwopper Refferal Code: " + res.refnumber
-      }).catch((err) => {
-        alert(err);
-      })
-    } else {
-      this.storage.get('afterfundbalance').then((res) => {
-        if (res != null) {
-          this.balance = res.toFixed(2)
-        }
-      });
-    }
+    }).then(() =>{
+      console.log("Account details fetched")
+    }).catch((err) =>{
+      console.log(err)
+    })
+    // console.log('Ion view hs entered again');
+    // if (this.testint == 0) {
+
+      // console.log("dfdfdfdf")
+    //   this.storage.get('userdetails').then((res) => {
+    //     console.log(res);
+    //     this.fullname = res.name;
+    //     this.balance = res.balance.toFixed(2);
+    //     this.email = res.email;
+    //     this.myrefid = "SpotSwopper Refferal Code: " + res.refnumber
+    //   }).catch((err) => {
+    //     alert(err);
+    //   })
+    // } else {
+    //   this.storage.get('afterfundbalance').then((res) => {
+    //     if (res != null) {
+    //       this.balance = res.toFixed(2)
+    //     }
+    //   });
+    // }
 
     console.log(this.testint);
   }
 
+
+   withdrawfunds(){
+     this.router.navigateByUrl('/withdrawal')
+   }
 
   // makeEditable(index) {
   //   switch (index) {

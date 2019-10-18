@@ -19,7 +19,8 @@ const routes: Routes = [
   { path: 'register', loadChildren: './register/register.module#RegisterPageModule' },
   { path: 'listspot', loadChildren: './listspot/listspot.module#ListspotPageModule' },
   { path: 'purchasespot', loadChildren: './purchasespot/purchasespot.module#PurchasespotPageModule' },
-  { path: 'help', loadChildren: './help/help.module#HelpPageModule' }
+  { path: 'help', loadChildren: './help/help.module#HelpPageModule' },
+  { path: 'withdrawal', loadChildren: './withdrawal/withdrawal.module#WithdrawalPageModule' }
 ];
 
 @NgModule({
