@@ -1,33 +1,26 @@
-.titlediv{
-  margin-left: 6%;
-  display: flex;
-  align-items: center;
-  width: 50vw;
-  text-align: center;
-}
-
 .mynavbar{
   height: 45px;
-  // background-color: #222428;
   background: url('../../assets/icon/background.jpg');
   width: 100%;
 }
 
 #map{
   height: calc(100vh - 96px) !important;
-  // height: 80vh;
   z-index: 4;
+}
+
+ion-tab-bar{
+  height: 55px;
+}
+
+.mapandtabs{
+  height: 100vh;
 }
 
 .topinfo{
   width: 100%;
   height: 40px;
   background-color: blue;
-}
-
-.wholecontainer{
-  width: 100%;
-  height: 100%;
 }
 
 .floatinglist{
@@ -71,21 +64,9 @@
   animation-duration: 0.4s;
   // animation-delay: 4s;
 }
- 
-ion-content {
-  --overflow: hidden;
-  background-color: transparent;
-  width: 100%;
-}
-
-ion-tab-bar{
-  height: 55px;
-
-}
 
 ion-tab-button{
   background: url('../../assets/icon/background.jpg');
-
 }
 
 .test{
@@ -96,15 +77,4 @@ ion-tab-button{
   height: 35px;
   border-radius: 8px;
   margin: 5px;
-}
-
-.contentdiv .scroll-content{
-  width: 100%;
-  overflow: hidden;
-}
-
-.titlediv{
-  // this will be handled properly later
-  padding-left: 20px;
-  text-align: center;
 }

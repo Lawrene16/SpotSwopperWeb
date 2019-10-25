@@ -46,7 +46,7 @@
 
 </ion-header>
 
-<ion-content #content class="contentdiv">
+<ion-content #content>
 
   <div *ngIf="isFilterSelected" class="filterdiv animated fadeInUp">
     <div style="width: 100%; text-align: center; margin-top: 10px; padding-left: 20px">Filter Spots
@@ -114,17 +114,14 @@
     </ion-fab-button>
   </ion-fab>
 
-
-
-
-  <div>
+  <div class="mapandtabs">
     <!-- The map -->
     <div #mymap id="map">
     </div>
 
     <!-- The bottom tabs -->
     <ion-tabs>
-      <ion-tab-bar class="mytab" id="mytabb">
+      <ion-tab-bar slot="bottom" class="mytab" id="mytabb">
         <ion-tab-button (click)="changecolorandsize(1)">
           <ion-icon [color]="isFilterSelected ? selected : unselected" src="assets/icon/filter.svg"></ion-icon>
           <ion-label style="font-size: 10px" [color]="isFilterSelected ? selected : unselected">Filter Spots</ion-label>
@@ -148,7 +145,6 @@
           <ion-label style="font-size: 10px" [color]="isPurchasedSelected ? selected : unselected">Spots Purchased
           </ion-label>
         </ion-tab-button>
-
       </ion-tab-bar>
     </ion-tabs>
 

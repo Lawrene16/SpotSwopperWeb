@@ -113,12 +113,14 @@ export class PurchasespotPage implements OnInit {
   createtoken(){
     this.loadingCtrl.create({
       message: 'Processing your payment please wait...',}).then((load) =>{
+      load.present();
+
       this.stripe.createSource(this.card).then(result => {
         if (result.error) {
           var errorElement = document.getElementById('card-errors');
           errorElement.textContent = result.error.message;
+          load.dismiss();
         } else {
-          load.present();
           this.stripe.createToken(this.card).
             then((res) => {
               this.makePost(res.token.id, load);

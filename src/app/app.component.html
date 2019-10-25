@@ -1,6 +1,6 @@
 <ion-app>
   <ion-split-pane>
-    <ion-menu type="overlay">
+    <ion-menu type="overlay" [swipeGesture]="false">
       <ion-content>
 
         <div style="width: 100%; height: 25vh; background-image: url('../../assets/icon/background.jpg')">
@@ -41,6 +41,6 @@
 
 
     </ion-menu>
-    <ion-router-outlet main></ion-router-outlet>
+    <ion-router-outlet main [swipeGesture]="false"></ion-router-outlet>
   </ion-split-pane>
 </ion-app>
