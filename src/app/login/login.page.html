@@ -14,103 +14,99 @@
     <!-- Seperator -->
     <div style="margin-top: 4vh"></div>
 
-
-
-    <!-- <div class="animated bounce delay-2s">  
-      <div class="list card animated tada delay-2s">  
-      <div class="item item-divider">Upcoming</div>
-      <div class="item item-body">
-        <div>
-          You have <b>29</b> meetings on your calendar tomorrow.
-        </div>
-      </div>
-    </div>  -->
-
     <!-- Form -->
 
-    <div class="items">
-      <ion-grid>
-        <ion-row>
-          <ion-col size="1">
-            <ion-icon style="font-size: 26px; color: rgba(255, 255, 255, 0.3)" start name="ios-contact"></ion-icon>
-          </ion-col>
-          <ion-col>
-              <ion-input no-padding placeholder="Username / Email" [(ngModel)]="email" class="myinput" type="email" required>
-              </ion-input>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </div>
+    <ion-card style="background-color: white; margin-left: 25vw; border-radius: 10px; margin-right: 25vw;">
 
-    <!-- Seperator -->
-    <div style="margin-top: 1.3vh"></div>
+      <div style="margin-top: 3vh"></div>
 
+            <div class="items">
+              <ion-item style="width: 100%;">
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="1">
+                      <ion-icon style="font-size: 22px; color: black; opacity: 0.8;" start name="ios-contact"></ion-icon>
+                    </ion-col>
+                    <ion-col size="11">
+                      <ion-input no-padding placeholder="Username / Email" [(ngModel)]="email" class="myinput"
+                        type="email">
+                      </ion-input>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-item>
+            </div>
 
-    <div class="items">
+      <div class="items">
+        <ion-item style="width: 100%;">
         <ion-grid>
           <ion-row>
             <ion-col size="1">
-              <ion-icon style="font-size: 26px; color: rgba(255, 255, 255, 0.3)" start name="ios-lock"></ion-icon>
+              <ion-icon style="font-size: 22px; color: black; opacity: 0.8;" start name="ios-lock"></ion-icon>
             </ion-col>
-            <ion-col>
-                <ion-input no-padding placeholder="Password" [(ngModel)]="password" class="myinput" type="password" required>
-                </ion-input>
+            <ion-col size="11">
+              <ion-input no-padding placeholder="Password" [(ngModel)]="password" class="myinput" type="password"
+                >
+              </ion-input>
             </ion-col>
           </ion-row>
         </ion-grid>
+        </ion-item>
       </div>
 
 
-    <div style="margin-top: 2vh"></div>
+      <div style="margin-top: 3vh"></div>
 
-  <div align="center" style="color: white; font-size: 15px">Forgot Password</div>
+      <div align="center" style="color: black; opacity: 0.8; font-size: 13px">Forgot Password?</div>
 
-  <div style="margin-top: 3.5vh"></div>
+      <div style="margin-top: 2.5vh"></div>
 
-  <div>
-      <ion-button  expand="round" style="width: 100%; height: 35px;" color="danger" (click)="signin()">SIGN IN</ion-button>
-  </div>
+      <p align="center">
+        <ion-button expand="round" style="width: 60%; height: 30px;" color="danger" (click)="signin()">SIGN IN
+        </ion-button>
+      </p>
 
-  <!-- Seperator -->
-  <div style="margin-top: 4vh"></div>
-  
-<div align="center" style="color: white; font-size: 20px; opacity: 0.9; margin-top: 50dp">---------------OR----------------</div>
+      <!-- Seperator -->
+      <div style="margin-top: 4vh"></div>
 
+      <div align="center" style="color: black; font-size: 17px; opacity: 0.9; margin-top: 50dp">
+        ---------------OR----------------</div>
 
-  <!-- Seperator -->
-<div style="margin-top: 4vh"></div>
-<div  align="center" class="knowrow">Login with your social networks</div>
+      <!-- Seperator -->
+      <div style="margin-top: 4vh"></div>
+      <div align="center" class="loginwithsocialtext">Login with your social networks</div>
 
+      <!-- Seperator -->
+      <div style="margin-top: 3vh"></div>
 
+      <div>
 
-  <!-- Seperator -->
-  <div style="margin-top: 4vh"></div>
+        <ion-grid>
 
-<div>
+          <ion-row style="justify-content: center; padding-left: 20px;">
 
-    <ion-grid>
-      
-      <ion-row style="justify-content: center; padding-left: 20px;" >
+            <div class="testclass" (click)="fblogin()">
+              <img style="zoom:8%;" src="../../assets/icon/facebook.svg">
+            </div>
 
-        <div class="testclass" (click)="fblogin()">
-                <img style="zoom:10%;" src="../../assets/icon/facebook.svg">
-        </div>
+            <div class="testclass" (click)="googleLogin()">
+              <img style="zoom:8%;" src="../../assets/icon/google.svg">
+            </div>
+          </ion-row>
+        </ion-grid>
 
-        <div class="testclass" (click)="googleLogin()">
-                  <img style="zoom:10%;" src="../../assets/icon/google.svg">
-        </div>
-        </ion-row>
-    </ion-grid>
-    
-</div>
+      </div>
 
+      <div style="margin-top: 2vh"></div>
 
-  <!-- Seperator -->
-  <div style="margin-top: 4vh"></div>
+      <div routerLink="/register" routerDirection="forward" align="center" style="text-align:center;">
+        <ion-label style="color:black; font-size: 14px; cursor: pointer; opacity: 0.8;">Dont have an account? <b>Sign
+            Up</b></ion-label>
+      </div>
 
-<div routerLink="/register" routerDirection="forward" align="center" style="text-align:center;">
-    <ion-label style="color:white; font-size: 17px;" >Dont have an account? Sign Up</ion-label>
-</div>
+      <div style="margin-top: 4vh"></div>
+
+    </ion-card>
 
   </div>
 

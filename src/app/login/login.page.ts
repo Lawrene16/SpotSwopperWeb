@@ -32,7 +32,6 @@ export class LoginPage implements OnInit {
     }
 
   ngOnInit() {
-
   }
 
   ngAfterViewInit(){
@@ -79,7 +78,7 @@ export class LoginPage implements OnInit {
   }
 
   fblogin() {
-    this.auth.facebookNativeLogin().then((res:any) => {
+    this.auth.popupFacebookLogin().then((res:any) => {
       this.loadingCtrl.create({
         message: 'Logging you in',
       }).then((load) =>{
@@ -105,9 +104,8 @@ export class LoginPage implements OnInit {
     });
   }
 
-
   googleLogin(){
-    this.auth.googleNativeLogin().then((res:any) =>{
+    this.auth.popupGoogleLogin().then((res:any) =>{
 
       console.log(res);
       this.loadingCtrl.create({
@@ -134,7 +132,6 @@ export class LoginPage implements OnInit {
       console.log(err);
     });
   }
-
 
   storeUserStuff(name, email, photo, load) {
     this.storage.set('appjustlaunching', 'true');

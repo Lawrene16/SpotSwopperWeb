@@ -25,14 +25,8 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
-
-// body{
-//     padding-top: constant(safe-area-inset-top);
-//     padding-top: env(safe-area-inset-top);
-// }
-
 body {
-    background-color: var(--ion-color-dark);
+    // background-color: var(--ion-color-dark);
 }
 
 ion-app {

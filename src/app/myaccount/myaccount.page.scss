@@ -1,17 +1,19 @@
 
     .topdiv{
         width: 100%;
-        // background-color: #222428;
-        background-image: url('../../assets/icon/background.jpg');
+        background-color: #000000;
+        // background-image: url('../../assets/icon/background.jpg');
         padding-top: 10px;
         // background-color: #0e0d0d;
         align-content: center;
-        text-align: center;        
+        text-align: center;      
+        background-image: linear-gradient(to bottom right, black, #353535);
+
         height: 30vh;
     }
 
     ion-toolbar {
-        --background: url('../../assets/icon/background.jpg');
+        // --background: url('../../assets/icon/background.jpg');
         --background-repeat: no-repeat;
         //  fixed center; 
      }

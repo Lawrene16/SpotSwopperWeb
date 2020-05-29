@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import * as firebase from 'firebase';
+import { StarRatingModule } from 'ionic4-star-rating';
+
 
 @Component({
   selector: 'app-history',

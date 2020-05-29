@@ -1,63 +1,80 @@
-.content_bg{
-    background-image: url('../../assets/icon/backgroundimg.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    width: 100%;
-    height: 106%;
+.content_bg {
+  background-image: url('../../assets/icon/backgroundimg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 120%;
 }
 
-.itemclass{
-    height: 20px;
-    align-content: center;
-    background: rgba(158, 158, 158, 0.6);
-    padding-left: 10px;
-    opacity: 0.3;
-    margin-bottom: 12px;
-    color: white;
-    border-radius: 20px;    
+.itemclass {
+  height: 20px;
+  align-content: center;
+  // background:color($colors, grey);
+  background: rgba(158, 158, 158, 0.6);
+  padding-left: 10px;
+  opacity: 0.3;
+  margin-bottom: 12px;
+  color: white;
+  border-radius: 20px;
 }
 
 
-.items{
-    height: 45px;
-    border-radius: 20px; 
-    display: flex;
-    align-items: center;   
-    background-color: rgba(158, 158, 158, 0.15);
+.items {
+  // height: 45px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  // border-style: solid;
+  // border-width: 0.5px;
+  margin-left: 20px;
+  margin-right: 20px;
 
 }
 
-.myinput{
+.myinput {
   margin-top: 5px;
   margin-left: 6px;
+  font-size: 14px;
+  color: black;
+}
+
+.testclass {
+  cursor: pointer;
+  padding-right: 30px;
+}
+
+.knowrow {
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.3);
+  color: #9e9e9e;
 }
 
-.testclass{
-    padding-right: 30px;
-}
-
-.knowrow{
-    justify-content: center; 
-    margin-top: 10px; 
-    margin-bottom: 10px; 
-    font-size: 16px;
-    color: #9e9e9e;
+.loginwithsocialtext {
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  opacity: 0.8;
+  font-size: 14px;
+  color: black;
 }
 
 ion-input {
-    &.custom-input {
-      font-size: 20px; //sets text font size
-      ::placeholder {
-        font-size: 18px; 
-        color: rgba(255, 255, 255, 0.3);//sets placeholder font size
-      }
+  &.custom-input {
+    font-size: 14px; //sets text font size
+
+    ::placeholder {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.3); //sets placeholder font size
     }
   }
+}
 
-   
+
+
 ion-content {
-  --overflow: hidden;
+  // --overflow: hidden;
 
 }

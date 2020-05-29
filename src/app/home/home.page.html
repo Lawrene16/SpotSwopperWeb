@@ -10,7 +10,7 @@
 
     <ion-row style="height: 45px; padding: 0px">
       <ion-col size="1.5">
-        <ion-menu-button color="light"></ion-menu-button>
+        <ion-menu-button (click)="showSplitPane()" color="light"></ion-menu-button>
       </ion-col>
 
       <ion-col
@@ -48,6 +48,95 @@
 
 <ion-content #content>
 
+  <div style="cursor: pointer;" [hidden]="isTutorialOneHidden" (click)="hideTutorials(1)" style="width: 100vw; 
+  height: 100vh; background-color: rgba(41, 41, 41, 0.3);
+  position: absolute;
+  top: 0px;
+  z-index: 7;
+  padding-top: 20px;
+  position: absolute;
+  ">
+
+      <p style="float: right; font-weight: 500; text-decoration: underline; font-size: 18px; margin-right: 30px; cursor: pointer;">Skip
+      </p>
+
+    <div style="width: 100vw; position: absolute; left: 60px; bottom: 20px;">
+      <div>
+        <span style="font-family: shintaku; text-align: center; font-size: 30px; color: #FF7C0B ">Click here</span><br>
+        <span style="font-family: shintaku; text-align: center; font-size: 30px; color: #FF7C0B ">To filter
+          spots</span><br>
+        <div style="width: 100vw; margin-bottom: 10px;"><img style="padding-left: 35px;" height="100px"
+            src="../../assets/icon/arrow.png"></div>
+        <img height="80px">
+      </div>
+    </div>
+  </div>
+
+  <div style="cursor: pointer;" [hidden]="isTutorialTwoHidden" (click)="hideTutorials(2)" style="width: 100vw; 
+  height: 100vh; background-color: rgba(41, 41, 41, 0.3);
+  position: absolute;
+  top: 0px;
+  z-index: 7;
+  padding-top: 20px;
+  position: absolute;
+  text-align: center;
+  ">
+
+          <p
+            style="float: left; font-weight: 500; text-decoration: underline; font-size: 18px; margin-left: 30px; cursor: pointer;">
+            Skip</p>
+
+
+
+    <div style="width: 100vw; position: absolute; top: 20px;">
+      <div>
+        <div style="width: 100vw; margin-top: 10px; padding-right: 40px;">
+          <img style="float: right; transform: scale(-1, -1);" height="100px" src="../../assets/icon/arrow.png"></div>
+        <img height="50px">
+        <br>
+        <br>
+        <br>
+
+        <span style="font-family: shintaku; font-size: 30px; color: #FF7C0B ">Click here</span><br>
+        <span style="font-family: shintaku; font-size: 30px; color: #FF7C0B ">to search for spots</span><br>
+      </div>
+    </div>
+  </div>
+
+    <div style="cursor: pointer;" [hidden]="isTutorialThreeHidden" (click)="hideTutorials(3)" style="width: 100vw; 
+  height: 100vh; background-color: rgba(41, 41, 41, 0.3);
+  position: absolute;
+  top: 0px;
+  z-index: 7;
+  padding-top: 20px;
+  position: absolute;
+  text-align: center">
+
+      <p style="float: right; cursor: pointer; font-weight: 500; text-decoration: underline; font-size: 18px; margin-right: 30px;">Skip</p>
+
+
+      <div style="width: 100vw; position: absolute; top: 20px;">
+        <div>
+          <div style="width: 100vw; margin-top: 10px; padding-left: 40px;">
+            <img style="float: left; transform: scaleY(-1);" height="100px" src="../../assets/icon/arrow.png"></div>
+          <img height="50px">
+          <br>
+          <br>
+          <br>
+          <br>
+
+
+          <span style="font-family: shintaku; font-size: 30px; color: #FF7C0B ">Click here to open menu</span><br>
+          <span style="font-family: shintaku; font-size: 30px; color: #FF7C0B ">then click on "Help" to</span><br>
+          <span style="font-family: shintaku; font-size: 30px; color: #FF7C0B ">view more tips!!</span><br>
+
+        </div>
+      </div>
+    </div>
+
+
+
+
   <div *ngIf="isFilterSelected" class="filterdiv animated fadeInUp">
     <div style="width: 100%; text-align: center; margin-top: 10px; padding-left: 20px">Filter Spots
       <ion-icon (click)="changecolorandsize(1)" name="close"
@@ -56,7 +145,7 @@
 
     <ion-list>
       <ion-radio-group [(ngModel)]="filteredspottype">
-        
+
         <ion-item>
           <ion-label>Hunting Spot</ion-label>
           <ion-radio value="Hunting Spot"></ion-radio>
@@ -114,41 +203,50 @@
     </ion-fab-button>
   </ion-fab>
 
-  <div class="mapandtabs">
-    <!-- The map -->
+ <div class="mapandtabs">
     <div #mymap id="map">
     </div>
 
-    <!-- The bottom tabs -->
-    <ion-tabs>
-      <ion-tab-bar slot="bottom" class="mytab" id="mytabb">
-        <ion-tab-button (click)="changecolorandsize(1)">
-          <ion-icon [color]="isFilterSelected ? selected : unselected" src="assets/icon/filter.svg"></ion-icon>
-          <ion-label style="font-size: 10px" [color]="isFilterSelected ? selected : unselected">Filter Spots</ion-label>
-        </ion-tab-button>
+ 
+    <div style="width: 100%;  position: absolute;top: calc(100vh - 105px); z-index: 9;">
+      <div (click)="changecolorandsize(1)" class="bottoms">
+        <p style="margin: 0px;" align="center">
+          <ion-icon style="font-size: 30px;" [color]="isFilterSelected ? selected : unselected"
+            src="assets/icon/filter.svg"></ion-icon>
+          <ion-label style="font-size: 13px; display: block;" [color]="isFilterSelected ? selected : unselected">Filter
+            Spots</ion-label>
+        </p>
+      </div>
 
-        <ion-tab-button (click)="changecolorandsize(2)">
-          <ion-icon [color]="isListedSelected ? selected : unselected" src="assets/icon/list.svg"></ion-icon>
-          <ion-label style="font-size: 10px" [color]="isListedSelected ? selected : unselected">Spots Listed</ion-label>
-          <!-- <ion-badge>6</ion-badge> -->
-        </ion-tab-button>
+      <div (click)="changecolorandsize(2)" class="bottoms">
+        <p style="margin: 0px;" align="center">
+          <ion-icon style="font-size: 30px;" [color]="isListedSelected ? selected : unselected"
+            src="assets/icon/list.svg"></ion-icon>
+          <ion-label style="font-size: 13px; display: block;" [color]="isListedSelected ? selected : unselected">Spots
+            Listed</ion-label>
+        </p>
+      </div>
 
-        <ion-tab-button (click)="changecolorandsize(3)">
-          <ion-icon [color]="isSoldSelected ? selected : unselected" color="light" src="assets/icon/sold.svg">
-          </ion-icon>
-          <ion-label style="font-size: 10px" [color]="isSoldSelected ? selected : unselected">Spots Sold</ion-label>
-        </ion-tab-button>
+      <div (click)="changecolorandsize(3)" class="bottoms">
+        <p style="margin: 0px;" align="center">
+          <ion-icon style="font-size: 30px;" [color]="isSoldSelected ? selected : unselected" color="light"
+            src="assets/icon/sold.svg"></ion-icon>
+          <ion-label style="font-size: 13px; display: block;" [color]="isSoldSelected ? selected : unselected">Spots
+            Sold</ion-label>
+        </p>
+      </div>
 
-        <ion-tab-button (click)="changecolorandsize(4)">
-          <ion-icon [color]="isPurchasedSelected ? selected : unselected" color="light" src="assets/icon/cart.svg">
-          </ion-icon>
-          <ion-label style="font-size: 10px" [color]="isPurchasedSelected ? selected : unselected">Spots Purchased
+      <div (click)="changecolorandsize(4)" class="bottoms">
+        <p style="margin: 0px;" align="center">
+          <ion-icon style="font-size: 28px;" [color]="isPurchasedSelected ? selected : unselected" color="light"
+            src="assets/icon/cart.svg"></ion-icon><br>
+          <ion-label style="font-size: 11px; " [color]="isPurchasedSelected ? selected : unselected">Spots Purchased
           </ion-label>
-        </ion-tab-button>
-      </ion-tab-bar>
-    </ion-tabs>
-
-  </div>
+        </p>
+      </div>
+    </div>
+   
+  </div> 
 
 
 </ion-content>

@@ -1,12 +1,13 @@
-<ion-app>
-  <ion-split-pane>
+<!-- <ion-app>
+  <ion-split-pane disabled="true">
     <ion-menu type="overlay" [swipeGesture]="false">
       <ion-content>
 
-        <div style="width: 100%; height: 25vh; background-image: url('../../assets/icon/background.jpg')">
+        <div style="width: 100%; height: 25vh; 
+        background-image: linear-gradient(to bottom right, black, #353535);
+        ">
           <div style="width: 100%">
             <img style="margin-left: 16px; margin-top: 2vh" height="75" src="../assets/icon/user.png">
-            <!-- <div style="color: white; float: right; margin: 20px; font-size: 18px">${{balance}}</div> -->
           </div>
 
           <div style="margin-left: 25px; margin-top: 1.3vh">
@@ -18,7 +19,7 @@
         </div>
         <ion-list>
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
-            <ion-item (click)="checkPage(p)">
+            <ion-item lines="none" (click)="checkPage(p)">
               <ion-icon slot="start" [name]="p.icon"></ion-icon>
               <ion-label>
                 {{p.title}}
@@ -40,6 +41,71 @@
 
 
 
+    </ion-menu>
+    <ion-router-outlet main [swipeGesture]="false"></ion-router-outlet>
+  </ion-split-pane>
+</ion-app> -->
+
+<ion-app>
+  <ion-split-pane disabled="true">
+
+  <!-- <ion-split-pane when="(min-width: 40px)"> -->
+
+    <ion-menu type="overlay" [swipeGesture]="false">
+      <ion-content>
+
+        <div style=" height: 100%; width: 100%; background-image: linear-gradient(to bottom right, black, #131313)">
+
+          <div style="width: 100%; padding-top: 3vh">
+            <p align="center"><img height="65" src="../assets/icon/man.svg">
+              <br>
+              <br>
+
+              <span style="color: white; font-weight: 600; padding-top: 50px; opacity: 0.9; font-size: 16px">
+                {{fullname}}
+              </span>
+              <br>
+              <span style="color: white; opacity: 0.6; font-size: 13px">
+                {{useremail}}
+              </span>
+            </p>
+          </div>
+
+
+          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
+                      <div  (click)="checkPage(p)" style="cursor: pointer;">
+                        <ion-grid  style="margin-left: 25px; margin-right: 25px;">
+                          <ion-row class="menuoption">
+                            <ion-col size="3.5">
+                              <img height="20px" src="../assets/icon/{{p.icon}}white.png">
+                            </ion-col>
+                            <ion-col size="8.5">
+                              <div style="margin-top: 3px;"></div>
+                              <span class="menuoption" style="color: white; font-size: 15px; font-weight: 500;">{{p.title}}</span>
+                            </ion-col>
+                          </ion-row>
+                        </ion-grid>
+                      </div>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle auto-hide="false">
+            <p (click)="logout()" align="center"
+              style="width: 60%; cursor: pointer; padding-top: 5px; padding-bottom: 5px; background-color: #1d1d1d; color: white; margin-left: 15%; font-size: 15px; font-weight: 500; margin-right: 15%;">
+              LOG OUT
+            </p>
+          </ion-menu-toggle>
+          
+
+          <ion-grid style="padding-top: 2.5vh;">
+            <ion-row style="justify-content: center;">
+              <div>
+                <img alt="logo" height="30" class="timg" src="../../assets/icon/logom1.png">
+              </div>
+              <div style="margin-top: 6px; color:white; padding-left: 5px;">SPOTSWOPPER</div>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </ion-content>
     </ion-menu>
     <ion-router-outlet main [swipeGesture]="false"></ion-router-outlet>
   </ion-split-pane>

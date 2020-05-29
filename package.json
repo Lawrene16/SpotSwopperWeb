@@ -19,23 +19,23 @@
     "@angular/forms": "~8.1.2",
     "@angular/platform-browser": "~8.1.2",
     "@angular/platform-browser-dynamic": "~8.1.2",
+    "@angular/pwa": "^0.901.4",
     "@angular/router": "~8.1.2",
+    "@angular/service-worker": "~8.1.2",
     "@ionic-native/core": "^5.0.0",
-    "@ionic-native/facebook": "^5.11.0",
+    "@ionic-native/facebook": "^5.25.0",
     "@ionic-native/geolocation": "^5.11.0",
-    "@ionic-native/google-plus": "^5.12.0",
+    "@ionic-native/google-plus": "^5.22.0-beta-1",
     "@ionic-native/social-sharing": "^5.11.0",
     "@ionic-native/splash-screen": "^5.0.0",
     "@ionic-native/status-bar": "^5.0.0",
     "@ionic/angular": "^4.7.1",
     "@ionic/storage": "^2.2.0",
     "angularfire2": "^5.2.1",
-    "cordova-android": "7.1.4",
-    "cordova-ios": "4.5.5",
     "cordova-plugin-device": "^2.0.2",
-    "cordova-plugin-facebook4": "5.0.0",
+    "cordova-plugin-facebook4": "^6.4.0",
     "cordova-plugin-geolocation": "4.0.2",
-    "cordova-plugin-googleplus": "7.0.2",
+    "cordova-plugin-googleplus": "^8.4.0",
     "cordova-plugin-ionic-keyboard": "^2.1.3",
     "cordova-plugin-ionic-webview": "^4.1.1",
     "cordova-plugin-splashscreen": "^5.0.2",
@@ -46,6 +46,8 @@
     "es6-promise-plugin": "^4.2.2",
     "firebase": "^6.3.4",
     "google-maps-infobox": "^2.0.0",
+    "ionic4-rating": "^1.0.9",
+    "ionic4-star-rating": "^1.1.1",
     "rxjs": "~6.5.1",
     "snazzy-info-window": "^1.1.1",
     "tslib": "^1.9.0",
@@ -88,24 +90,18 @@
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-facebook4": {
-        "APP_ID": "682850092148781",
-        "APP_NAME": "SpotSwopper",
-        "FACEBOOK_HYBRID_APP_EVENTS": "false",
-        "FACEBOOK_ANDROID_SDK_VERSION": "5.0.2"
-      },
       "cordova-plugin-geolocation": {
         "GEOLOCATION_USAGE_DESCRIPTION": "To locate you"
       },
+      "cordova-plugin-statusbar": {},
       "cordova-plugin-googleplus": {
-        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.72131126436-nsfl3vi89h0jd6orkhgh570l2asd9fpj",
-        "PLAY_SERVICES_VERSION": "11.8.0"
+        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.72131126436-nsfl3vi89h0jd6orkhgh570l2asd9fpj"
       },
-      "cordova-plugin-statusbar": {}
+      "cordova-plugin-facebook4": {
+        "APP_ID": "682850092148781",
+        "APP_NAME": "SpotSwopper"
+      }
     },
-    "platforms": [
-      "android",
-      "ios"
-    ]
+    "platforms": []
   }
 }

@@ -21,3 +21,14 @@
 //   ion-content.padding.scroll-content.ionic-scroll.has-header.has-tabs {
 //     top: calc(64px + constant(safe-area-inset-top));
 //   }
+@import '../theme/fonts';
+
+
+ion-menu {
+    --width: 220px;
+}
+
+.menuoption:hover{
+    // background-color: white;
+    // color: ;
+}

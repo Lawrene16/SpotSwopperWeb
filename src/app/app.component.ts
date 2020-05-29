@@ -12,54 +12,47 @@ import { Events } from '@ionic/angular';
 
 
 @Component({
-  selector: 'app-root',
-  templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss']
+  selector: "app-root",
+  templateUrl: "app.component.html",
+  styleUrls: ["app.component.scss"],
 })
 export class AppComponent {
-
   refernumber;
   fullname;
   balance;
   useremail;
-  
 
   public appPages = [
     {
-      title: 'Home',
-      url: '/home',
-      icon: 'home'
+      title: "Home",
+      url: "/home",
+      icon: "home",
     },
     {
-      title: 'My Account',
-      url: '/myaccount',
-      icon: 'person'
+      title: "My Account",
+      url: "/myaccount",
+      icon: "myaccount",
     },
     {
-      title: 'Referrals',
-      url: '/referrals',
-      icon: 'people'
+      title: "Referrals",
+      url: "/referrals",
+      icon: "referrals",
     },
     {
-      title: 'Transaction History',
-      url: '/history',
-      icon: 'list'
+      title: "Transactions",
+      url: "/history",
+      icon: "history",
     },
     {
-      title: 'Help',
-      url: '/help',
-      icon: 'help-circle-outline'
+      title: "Help",
+      url: "/help",
+      icon: "help",
     },
     {
-      title: 'Share',
-      url: '/home',
-      icon: 'share'
+      title: "Share",
+      url: "/home",
+      icon: "share",
     },
-    {
-      title: 'Logout',
-      url: '/login',
-      icon: 'log-out'
-    }
   ];
 
   constructor(
@@ -73,35 +66,50 @@ export class AppComponent {
   ) {
     this.initializeApp();
 
-    this.events.subscribe('userstuff', (res) =>{
+    this.events.subscribe("userstuff", (res) => {
       // console.log(res)
-          this.fullname = res.name;
-        this.refernumber = res.refernumber;
-        this.useremail = res.email;
-        this.balance = res.balance.toFixed(2);
-    })
+      this.fullname = res.name;
+      this.refernumber = res.refernumber;
+      this.useremail = res.email;
+      this.balance = res.balance.toFixed(2);
+    });
+
+
+    // setTimeout(() => {
+    //      var menuoption = document.getElementById("menuoption");
+    //   menuoption.addEventListener("mouseenter", (i:any) => {
+    //        console.log(i.target.innerText)
+    //      });
+
+    // }, 300);
+ 
   }
 
-  checkPage(p){
-    if(p.title == "Logout"){
-      firebase.auth().signOut().then(() =>{
-        this.router.navigateByUrl(p.url)
-      });
-    }
+  selectOption() {}
 
-    else if(p.title == "Share"){
+  checkPage(p) {
+    if (p.title == "Share") {
       this.regularShare();
-    }
-
-    else{
-      this.router.navigateByUrl(p.url)
+    } else {
+      this.router.navigateByUrl(p.url);
     }
   }
 
+  logout() {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        this.router.navigateByUrl('login');
+      });
+  }
 
   compilemsg(): string {
-    var msg = "Hi, this is an awesome app built for buying and selling of spots";
-    return msg.concat(" \n Sent from my Awesome App !" + " \n " + this.refernumber);
+    var msg =
+      "Hi, this is an awesome app built for buying and selling of spots";
+    return msg.concat(
+      " \n Sent from my Awesome App !" + " \n " + this.refernumber
+    );
   }
 
   regularShare() {
@@ -112,9 +120,12 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       // this.statusBar.styleDefault();
-      this.statusBar.backgroundColorByHexString('#222428');
-      this.statusBar.overlaysWebView(false); 
-      this.splashScreen.hide();
+
+      setTimeout(() => {
+        this.statusBar.backgroundColorByHexString("#222428");
+        this.statusBar.overlaysWebView(false);
+        this.splashScreen.hide();
+      }, 3000);
     });
   }
 }

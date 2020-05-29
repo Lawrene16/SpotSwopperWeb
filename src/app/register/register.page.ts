@@ -148,7 +148,7 @@ export class RegisterPage implements OnInit {
   }
 
   googleLogin(){
-    this.auth.googleNativeLogin().then((res:any) =>{
+    this.auth.popupGoogleLogin().then((res:any) =>{
 
       console.log(res);
       this.loadingCtrl.create({
@@ -177,7 +177,7 @@ export class RegisterPage implements OnInit {
   }
 
   fblogin() {
-    this.auth.facebookNativeLogin().then((res:any) => {
+    this.auth.popupFacebookLogin().then((res:any) => {
       this.loadingCtrl.create({
         message: 'Logging you in',
       }).then((load) =>{

@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar color="dark">
         <ion-buttons slot="start">
             <ion-menu-button color="light"></ion-menu-button>
           </ion-buttons>
@@ -20,7 +20,20 @@
     <p *ngIf="isempty" align="center" style="margin-left: 5px; margin-right: 5px; margin-top: 15px">
       You have not done any transactions yet. Buy or sell a spot!!
     </p>
-  
+
+
+    <!-- <ionic4-star-rating #rating
+    activeIcon = "ios-star"
+    defaultIcon = "ios-star-outline"
+    activeColor = "#488aff" 
+    defaultColor = "#f4f4f4"
+    readonly="false"
+    rating="3"
+    fontSize = "32px"
+    (ratingChanged)="logRatingChange($event)">
+</ionic4-star-rating> -->
+
+
     <ion-item *ngFor="let transaction of transactionlist" style="margin-right: 10px">
       <ion-row class="transactions">
         <ion-col style="margin-top: 8px" size="2">
